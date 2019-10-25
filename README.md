@@ -89,6 +89,8 @@ a, b, c, d stand for the allele counts of one parent for each pool.
         III    316620
         ......
 
+ [back to top](#top)
+
 * ### <a name="inputconfblk"></a>Block regression configuration file
     It's a **key-value** file contains block regression parameters. The separator is "=". And the space between key and value will be ignored.
     There are five parameters needed to be set:
@@ -109,6 +111,8 @@ a, b, c, d stand for the allele counts of one parent for each pool.
         BLK      = 0.2
         MIN      = 1  # min depth in block
         MINVALID = 10 # min valid blocks in one chromosome (needed to be at least 10)
+
+ [back to top](#top)
 
 *  ### <a name="inputconfpop"></a>Population information configuration file
     It's a **key-value** file contains experimental design information. The separator is "=". And the space between key and value will be ignored.
