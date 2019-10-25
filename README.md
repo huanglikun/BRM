@@ -393,7 +393,9 @@ transformation sterility gene (hts) in wheat using GBS markers. *BMC Plant Biolo
     
     ### <a name="outputstep3example"></a>Example
     The theoretical threshold in example is 0.166565302509256.
+    
     So,
+    
     Before:
     
       #Chromosome	Peak Position	Peak Value	Peak Direction	Interval Start	Interval End
