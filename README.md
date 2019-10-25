@@ -26,6 +26,7 @@ Bulked segregant analysis by deep sequencing (BSA-seq) has been widely used for 
 years. A number of different statistical methods for BSA-seq have been proposed. However, determination 
 of significance threshold, the key point for QTL identification, remains to be a problem that has not been 
 well solved due to the difficulty of multiple test correction. In addition, estimation of the confidence interval is also a problem to be solved.
+
 Here, we propose a new statistical method for BSA-seq, named Block Regression Mapping (BRM). BRM is 
 robust to sequencing noise and is applicable to the case of low sequencing depth. Significance threshold 
 can be reasonably determined by taking multiple test correction into account. Meanwhile, the confidence 
