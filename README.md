@@ -31,6 +31,8 @@ robust to sequencing noise and is applicable to the case of low sequencing depth
 can be reasonably determined by taking multiple test correction into account. Meanwhile, the confidence 
 interval of QTL position can also be estimated.
 
+ [back to top](#top)
+
 ## <a name="getstart"></a>Getting started
 Get all scripts and the examples from github and have a try:
 ```bash
@@ -44,6 +46,9 @@ Rscript BRMstep1.loess.R configureExample/loess_conf.txt configureExample/chr_le
 Rscript BRMstep2.threshold.R configureExample/threshold_conf.txt result/AAF.xls result/AF1.xls result/AF2.xls result/threshold.xls
 Rscript BRMstep3.peak_and_CI.R result/AFD.xls result/threshold.xls result/allpeaks.xls
 ```
+
+ [back to top](#top)
+ 
 ## <a name="inputdata"></a>Input data format
 We use a **tab** separated file named bsa format as input data. There are six columns in this file:
 
