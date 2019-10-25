@@ -1,0 +1,5 @@
+UNIT     = 1000
+DEG      = 2
+BLK      = 0.2
+MIN      = 1  # min depth in block
+MINVALID = 10 # min valid blocks in one chromosome (needed to be at least 10)
