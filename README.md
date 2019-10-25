@@ -63,6 +63,8 @@ a, b, c, d stand for the allele counts of one parent for each pool.
 | High pool | a | b |
 | Low pool | c | d |
 
+![Pools illustration](https://github.com/huanglikun/BRM/blob/master/img/pools.png)
+
   ### <a name="inputdataexample"></a>Example
   **dataExample/yeast_markers_dp50.bsa**
 
