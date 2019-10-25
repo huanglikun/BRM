@@ -261,33 +261,33 @@ a, b, c, d stand for the allele counts of one parent for each pool.
 from the references listed except for that of yeast, which was calculated by us using the data from [2]. The genome size (Mb) of each species was all from NCBI. **c.** Corresponding to the overall 
 significance level of 0.05.
 
-**References**
+   **References**
 
-[1] Bindler,G. *et al.* (2011) A high density genetic map of tobacco (*Nicotiana tabacum* L.) obtained 
+   [1] Bindler,G. *et al.* (2011) A high density genetic map of tobacco (*Nicotiana tabacum* L.) obtained 
 from large scale microsatellite marker development. *Theor Appl Genet*, **123**, 219.
 
-[2] Bloom,J.S. *et al.* (2015) Genetic interactions contribute less than additive effects to quantitative 
+   [2] Bloom,J.S. *et al.* (2015) Genetic interactions contribute less than additive effects to quantitative 
 trait variation in yeast. *Nat Commun*, **6**, 8712.
 
-[3] Civardi,L. *et al.* (1994) The relationship between genetic and physical distances in the cloned 
+   [3] Civardi,L. *et al.* (1994) The relationship between genetic and physical distances in the cloned 
 a1-sh2 interval of the Zea mays L. genome. *Proc Natl Acad Sci U S A*, **91**, 8268–8272.
 
-[4] Garcia-Hernandez,M. *et al.* (2002) TAIR: a resource for integrated Arabidopsis data. *Funct 
+   [4] Garcia-Hernandez,M. *et al.* (2002) TAIR: a resource for integrated Arabidopsis data. *Funct 
 Integr Genomics*, **2**, 239–253.
 
-[5] Raman,H. *et al.* (2014) SNP markers-based map construction and genome-wide linkage analysis 
+   [5] Raman,H. *et al.* (2014) SNP markers-based map construction and genome-wide linkage analysis 
 in Brassica napus. *Plant Biotechnology Journal*, **12**, 851–860.
 
-[6] International Rice Genome Sequencing Project (2005) The map-based sequence of the rice 
+   [6] International Rice Genome Sequencing Project (2005) The map-based sequence of the rice 
 genome. *Nature*, **436**, 793.
 
-[7] Shirasawa,K. *et al.* (2010) SNP Discovery and linkage map construction in cultivated tomato. 
+   [7] Shirasawa,K. *et al.* (2010) SNP Discovery and linkage map construction in cultivated tomato. 
 *DNA Research*, **17**, 381–391.
 
-[8] Yang,Q. *et al.* (2018) High-density genetic map construction and mapping of the homologous 
+   [8] Yang,Q. *et al.* (2018) High-density genetic map construction and mapping of the homologous 
 transformation sterility gene (hts) in wheat using GBS markers. *BMC Plant Biology*, **18**, 301.
 
-[9] Zhou,Q. *et al.* (2015) A sequencing-based linkage map of cucumber. *Molecular Plant*, **8**, 
+   [9] Zhou,Q. *et al.* (2015) A sequencing-based linkage map of cucumber. *Molecular Plant*, **8**, 
 961–963.
    
    ### <a name="inputconfpopexample"></a>Example
