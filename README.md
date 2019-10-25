@@ -282,10 +282,6 @@ transformation sterility gene (hts) in wheat using GBS markers. *BMC Plant Biolo
 
 [9] Zhou,Q. *et al.* (2015) A sequencing-based linkage map of cucumber. *Molecular Plant*, **8**, 
 961–963.
-
-
-
-
    
    ### <a name="inputconfpopexample"></a>Example
    **configureExample/threshold_conf.txt**
@@ -360,6 +356,8 @@ transformation sterility gene (hts) in wheat using GBS markers. *BMC Plant Biolo
       I	179200	0.0686274509803921	0.0713669575534733	0.00665181133840192	1
       ......
     
+ [back to top](#top)
+    
 * ### <a name="outputstep2"></a>BRM step 2 output: the threshold
     The output file of BRM step 2 (BRMstep2.threshold.R) include eight columns:
     
@@ -380,6 +378,7 @@ transformation sterility gene (hts) in wheat using GBS markers. *BMC Plant Biolo
       I	179200	0.465686274509804	0.509341123131258	0.166536232134715	0.00166608495612431	0.166565302509256	0.00165722882484733
       ......
       
+ [back to top](#top)
 
 * ### <a name="outputstep3"></a>BRM step 3 output: the peaks and the confidence intervals
     The script (BRMstep3.peak_and_CI.R) identify all possible peaks and calculate the confidence interval assuming that is a QTL peak. After getting the output, we can filter out most of the peaks whose value below threshold by using Excel etc. first. Then, we can pick up those reasonable peak lines.
