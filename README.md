@@ -25,7 +25,7 @@
 
 BRM is designed for BSA-seq mapping, not only for QTL mapping, but also suitable for qualitative trait gene mapping, mutant gene mapping etc.. And it can also apply to many populations, such as pure lines (RIL, DH, and H), segregation populations ( ![equation](https://latex.codecogs.com/gif.latex?F_2) , ![equation](https://latex.codecogs.com/gif.latex?F_3) etc. ). 
 
-BRM find out candidate QTL (or genes region) peaks in three main steps. The first step is cuting the genome into blocks, then calculating the statistics in each block. The second step is using those statistics above to figure out the theoretical threshold. The third step is digging out all possible peaks in opposite pools **A**llele **F**requency **D**ifference file and also calculating each peaks' confidence interval. Although it will be many peaks at first, it is easy to filter out most of the peaks under threshold by using softwares like Excel etc., and finally leave the target peaks.
+BRM find out candidate QTL (or genes region) peaks in three main steps. The first step is dividing the genome into blocks, then calculating the statistics in each block. The second step is using those statistics above to figure out the theoretical threshold. The third step is digging out all possible peaks in opposite pools **A**llele **F**requency **D**ifference file and also calculating each peaks' confidence interval. Although it will be many peaks at first, it is easy to filter out most of the peaks below the threshold by using softwares like Excel etc., and finally leave the target peaks.
 
  [back to top](#top)
 
