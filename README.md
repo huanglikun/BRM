@@ -35,7 +35,8 @@ interval of QTL position can also be estimated.
  [back to top](#top)
 
 ## <a name="getstart"></a>Getting started
-Get all scripts and the examples from github and have a try:
+Download all scripts and examples from github, then you can have a try:
+
 ```bash
 git clone https://github.com/huanglikun/BRM.git
 cd BRM
@@ -47,6 +48,11 @@ Rscript BRMstep1.loess.R configureExample/loess_conf.txt configureExample/chr_le
 Rscript BRMstep2.threshold.R configureExample/threshold_conf.txt result/AAF.xls result/AF1.xls result/AF2.xls result/threshold.xls
 Rscript BRMstep3.peak_and_CI.R result/AFD.xls result/threshold.xls result/allpeaks.xls
 ```
+
+    Usage:
+    Rscript BRMstep1.loess.R <Block regression configuration file> <Chromosome length file> <Input data in bsa format> <Output file> <STATISTICS>
+    Rscript BRMstep2.threshold.R <Population information configuration file> <Average allele frequency file> <Pool1 allele frequency file> <Pool2 allele frequency file> <Threshold file>
+    Rscript BRMstep3.peak_and_CI.R <Allele frequency difference file> <Threshold file> <candidate peaks file>
 
  [back to top](#top)
  
@@ -102,7 +108,7 @@ a, b, c, d stand for the allele counts of one parent for each pool.
   | --- | --- | --- | --- |
   | UNIT | Integer | The unit of block size (bp).  | default: 1000 |
   | DEG | Integer | The degree of the polynomials to be used in Local Polynomial Regression Fitting. | 2 |
-  | BLK | Integer or float | The block size is equal to BLK * UNIT. | e.g.: 0.2 for yeast, 20 for rice |
+  | BLK | Integer or float | The block size equal to BLK * UNIT. | e.g.: 0.2 for yeast, 20 for rice |
   | MIN | Integer | Min total depth in one valid block. | 1 |
   | MINVALID | Integer | Min valid block number in one chromosome. | 10 |
     
