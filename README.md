@@ -1,5 +1,5 @@
 # <a name="top"></a>Block Regression Mapping (BRM)
-**Block Regression Mapping (BRM)** is a statistical method for QTL mapping based on bulked segregant analysis by deep sequencing. The core function is programmed by R language.
+**Block Regression Mapping (BRM)** is a statistical method for QTL mapping based on bulked segregant analysis by deep sequencing. The core function is programmed by R language. For the detailed description of the method, please see the original article "BRM: A statistical method for QTL mapping based on bulked segregant analysis by deep sequencing" (submitted to Bioinformatics).
 
 ## Content
 * [Introduction](#intro)
@@ -22,15 +22,10 @@
     * [Example](#outputstep3example)
 
 ## <a name="intro"></a>Introduction
-Bulked segregant analysis by deep sequencing (BSA-seq) has been widely used for QTL mapping in recent 
-years. A number of different statistical methods for BSA-seq have been proposed. However, determination 
-of significance threshold, the key point for QTL identification, remains to be a problem that has not been 
-well solved due to the difficulty of multiple test correction. In addition, estimation of the confidence interval is also a problem to be solved.
 
-Here, we propose a new statistical method for BSA-seq, named Block Regression Mapping (BRM). BRM is 
-robust to sequencing noise and is applicable to the case of low sequencing depth. Significance threshold 
-can be reasonably determined by taking multiple test correction into account. Meanwhile, the confidence 
-interval of QTL position can also be estimated.
+BRM is designed for BSA-seq mapping, not only for QTL mapping, but also suitable for qualitative trait gene mapping, mutant gene mapping etc.. And it can also apply to many populations, such as pure lines (RIL, DH, and H), segregation populations ( ![F2](https://latex.codecogs.com/gif.latex?F_2) , ![F3](https://latex.codecogs.com/gif.latex?F_3) etc. ). 
+
+BRM find out candidate QTL (or genes region) peaks in three main steps. The first step is dividing the genome into blocks, then calculating the statistics in each block. The second step is using those statistics above to figure out the theoretical threshold. The third step is digging out all possible peaks in opposite pools **A**llele **F**requency **D**ifference file and also calculating each peaks' confidence interval. Although it will be many peaks at first, it is easy to filter out most of the peaks below the threshold by using softwares like Excel etc., and finally leave the target peaks.
 
  [back to top](#top)
 
@@ -131,12 +126,13 @@ a, b, c, d stand for the allele counts of one parent for each pool.
    | --- | --- | --- | --- |
    | n1 | Integer | The individuals in pool1 (high pool).  | it depends on experiment design |
    | n2 | Integer | The individuals in pool2 (low pool).  | it depends on experiment design |
-   | t | 0,1 | Population type.  | For DH or RI etc., t=0; ![equation](https://latex.codecogs.com/gif.latex?F_2) or ![equation](https://latex.codecogs.com/gif.latex?F_3) etc., t=1 |
-   | ua | float | The ![equation](https://latex.codecogs.com/gif.latex?u_%7b%5calpha%2f2%7d) value.  | see the table below |
+   | t | 0,1 | Population type.  | For DH or RI etc., t=0; ![F2](https://latex.codecogs.com/gif.latex?F_2) or ![F3](https://latex.codecogs.com/gif.latex?F_3) etc., t=1 |
+   | ua | float | The ![u_{\alpha/2}](https://latex.codecogs.com/gif.latex?u_%7b%5calpha%2f2%7d) value.  | see the table below |
    
-   The values of ![equation](https://latex.codecogs.com/gif.latex?u_%7b%5calpha%2f2%7d) of some species 
+   The values of ![u_{\alpha/2}](https://latex.codecogs.com/gif.latex?u_%7b%5calpha%2f2%7d) of some species 
    
       <table>
+      <thead>
       <tr>
       <th rowspan=2>Species</th>
     <th rowspan=2>n<sup>a</sup></th>
@@ -153,6 +149,8 @@ a, b, c, d stand for the allele counts of one parent for each pool.
       <th>F<sub>4</sub></th>
       <th>RIL</th>
     </tr>
+    </thead>
+    <tbody>
     <tr>
      <td><i>Arabidopsis</i></td>
       <td>5</td>
@@ -261,6 +259,7 @@ a, b, c, d stand for the allele counts of one parent for each pool.
       <td>4.08</td>
       <td>[2]</td>
     </tr>
+    </tbody>
     </table>
 
    Note: **a.** n, number of chromosomes in haploid. **b.** The genetic map length (cM) of each species was 
@@ -311,8 +310,8 @@ transformation sterility gene (hts) in wheat using GBS markers. *BMC Plant Biolo
     In BRM step 1 (BRMstep1.loess.R), four statistics will be calculated.
    * Pool1 (high pool) allele frequency file (AF1.xls)
    * Pool2 (low pool) allele frequency file (AF2.xls)
-   * The **A**verage **A**llele **F**requency between Pool1 and Pool2 (AAF.xls)
-   * The **A**llele **F**requency **D**ifference between Pool1 and Pool2 (AFD.xls)
+   * The **A**verage **A**llele **F**requency between opposite pools Pool1 and Pool2 (AAF.xls)
+   * The **A**llele **F**requency **D**ifference between opposite pools Pool1 and Pool2 (AFD.xls)
          
     The first two files include seven columns:
     
