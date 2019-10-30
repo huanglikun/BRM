@@ -103,7 +103,7 @@ a, b, c, d stand for the allele counts of one parent for each pool.
   | --- | --- | --- | --- |
   | UNIT | Integer | The unit of block size (bp).  | default: 1000 |
   | DEG | Integer | The degree of the polynomials to be used in Local Polynomial Regression Fitting. | 2 |
-  | BLK | Integer or float | The block size equal to BLK * UNIT. | e.g.: 0.2 for yeast, 20 for rice |
+  | BLK | Integer or float | The block size is equal to BLK * UNIT. | e.g.: 0.2 for yeast, 20 for rice |
   | MIN | Integer | Min total depth in one valid block. | 1 |
   | MINVALID | Integer | Min valid block number in one chromosome. | 10 |
     
@@ -400,7 +400,7 @@ transformation sterility gene (hts) in wheat using GBS markers. *BMC Plant Biolo
     | --- | --- | --- | --- | --- | --- |
     
     ### <a name="outputstep3example"></a>Example
-    The theoretical threshold in example is 0.166565302509256.
+    The theoretical threshold in example is (±)0.166565302509256.
     
     So,
     
