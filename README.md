@@ -1,6 +1,8 @@
 # <a name="top"></a>Block Regression Mapping (BRM)
 **Block Regression Mapping (BRM)** is a statistical method for QTL mapping based on bulked segregant analysis by deep sequencing. The core function is programmed by R language. For the detailed description of the method, please see the original article "BRM: A statistical method for QTL mapping based on bulked segregant analysis by deep sequencing" (submitted to Bioinformatics).
 
+Please cite: Huang L, Tang W, Bu S, et al. BRM: A statistical method for QTL mapping based on bulked segregant analysis by deep sequencing. Bioinformatics, 2019.  https://doi.org/10.1093/bioinformatics/btz861
+
 ## Content
 * [Introduction](#intro)
 * [Getting started](#getstart)
