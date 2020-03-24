@@ -1,0 +1,22 @@
+# version 0.2
+
+# Experiment
+Design = BH             # available: A,BH,BL. BH: Design B with HIGH selected pool. BL: Design B with LOW selected pool.
+n1     = 300            # pool 1 size. The high pool for design A or the selected pool for design B.
+n2     = 300            # pool 2 size. The low pool for design A or the random pool for design B.
+t      = 0              # For DH or RI etc., t=0; F2 or F3 etc., t=1
+ua     = 4.08           # For rice, F2:3.65; F3:3.74; F4:3.78 .
+
+
+# Block regression
+UNIT     = 1000         # block unit(bp)
+DEG      = 2            # The degree of the polynomials to be used in Local Polynomial Regression Fitting.
+BLK      = 0.2          # block size = BLK * UNIT
+MIN      = 10           # min total depth in block
+MINVALID = 10           # min valid blocks in one chromosome (needed to be at least 10)
+
+# output file determination (optional)
+# Result1_File = result/result1.xls	# including allele frequency and threshold
+# Result2_File = result/result2.xls	# including peak information and confidence interval
+Result1_File = result_random_H/result1.xls	# including allele frequency and threshold
+Result2_File = result_random_H/result2.xls	# including peak information and confidence interval
