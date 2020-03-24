@@ -1,0 +1,174 @@
+##fileformat=VCFv4.2
+##fileDate=20200127
+##source=freeBayes v1.1.0-3-g961e5f3-dirty
+##reference=/genome/chr.fasta
+##contig=<ID=I,length=230218>
+##contig=<ID=II,length=813184>
+##contig=<ID=III,length=316620>
+##contig=<ID=IV,length=1531933>
+##contig=<ID=V,length=576874>
+##contig=<ID=VI,length=270161>
+##contig=<ID=VII,length=1090940>
+##contig=<ID=VIII,length=562643>
+##contig=<ID=IX,length=439888>
+##contig=<ID=X,length=745751>
+##contig=<ID=XI,length=666816>
+##contig=<ID=XI,length=1078177>
+##contig=<ID=XIII,length=924431>
+##contig=<ID=XIV,length=784333>
+##contig=<ID=XV,length=1091291>
+##contig=<ID=XVI,length=948066>
+##phasing=none
+##INFO=<ID=NS,Number=1,Type=Integer,Description="Number of samples with data">
+##INFO=<ID=DP,Number=1,Type=Integer,Description="Total read depth at the locus">
+##INFO=<ID=DPB,Number=1,Type=Float,Description="Total read depth per bp at the locus; bases in reads overlapping / bases in haplotype">
+##INFO=<ID=AC,Number=A,Type=Integer,Description="Total number of alternate alleles in called genotypes">
+##INFO=<ID=AN,Number=1,Type=Integer,Description="Total number of alleles in called genotypes">
+##INFO=<ID=AF,Number=A,Type=Float,Description="Estimated allele frequency in the range (0,1]">
+##INFO=<ID=RO,Number=1,Type=Integer,Description="Count of full observations of the reference haplotype.">
+##INFO=<ID=AO,Number=A,Type=Integer,Description="Count of full observations of this alternate haplotype.">
+##INFO=<ID=PRO,Number=1,Type=Float,Description="Reference allele observation count, with partial observations recorded fractionally">
+##INFO=<ID=PAO,Number=A,Type=Float,Description="Alternate allele observations, with partial observations recorded fractionally">
+##INFO=<ID=QR,Number=1,Type=Integer,Description="Reference allele quality sum in phred">
+##INFO=<ID=QA,Number=A,Type=Integer,Description="Alternate allele quality sum in phred">
+##INFO=<ID=PQR,Number=1,Type=Float,Description="Reference allele quality sum in phred for partial observations">
+##INFO=<ID=PQA,Number=A,Type=Float,Description="Alternate allele quality sum in phred for partial observations">
+##INFO=<ID=SRF,Number=1,Type=Integer,Description="Number of reference observations on the forward strand">
+##INFO=<ID=SRR,Number=1,Type=Integer,Description="Number of reference observations on the reverse strand">
+##INFO=<ID=SAF,Number=A,Type=Integer,Description="Number of alternate observations on the forward strand">
+##INFO=<ID=SAR,Number=A,Type=Integer,Description="Number of alternate observations on the reverse strand">
+##INFO=<ID=SRP,Number=1,Type=Float,Description="Strand balance probability for the reference allele: Phred-scaled upper-bounds estimate of the probability of observing the deviation between SRF and SRR given E(SRF/SRR) ~ 0.5, derived using Hoeffding's inequality">
+##INFO=<ID=SAP,Number=A,Type=Float,Description="Strand balance probability for the alternate allele: Phred-scaled upper-bounds estimate of the probability of observing the deviation between SAF and SAR given E(SAF/SAR) ~ 0.5, derived using Hoeffding's inequality">
+##INFO=<ID=AB,Number=A,Type=Float,Description="Allele balance at heterozygous sites: a number between 0 and 1 representing the ratio of reads showing the reference allele to all reads, considering only reads from individuals called as heterozygous">
+##INFO=<ID=ABP,Number=A,Type=Float,Description="Allele balance probability at heterozygous sites: Phred-scaled upper-bounds estimate of the probability of observing the deviation between ABR and ABA given E(ABR/ABA) ~ 0.5, derived using Hoeffding's inequality">
+##INFO=<ID=RUN,Number=A,Type=Integer,Description="Run length: the number of consecutive repeats of the alternate allele in the reference genome">
+##INFO=<ID=RPP,Number=A,Type=Float,Description="Read Placement Probability: Phred-scaled upper-bounds estimate of the probability of observing the deviation between RPL and RPR given E(RPL/RPR) ~ 0.5, derived using Hoeffding's inequality">
+##INFO=<ID=RPPR,Number=1,Type=Float,Description="Read Placement Probability for reference observations: Phred-scaled upper-bounds estimate of the probability of observing the deviation between RPL and RPR given E(RPL/RPR) ~ 0.5, derived using Hoeffding's inequality">
+##INFO=<ID=RPL,Number=A,Type=Float,Description="Reads Placed Left: number of reads supporting the alternate balanced to the left (5') of the alternate allele">
+##INFO=<ID=RPR,Number=A,Type=Float,Description="Reads Placed Right: number of reads supporting the alternate balanced to the right (3') of the alternate allele">
+##INFO=<ID=EPP,Number=A,Type=Float,Description="End Placement Probability: Phred-scaled upper-bounds estimate of the probability of observing the deviation between EL and ER given E(EL/ER) ~ 0.5, derived using Hoeffding's inequality">
+##INFO=<ID=EPPR,Number=1,Type=Float,Description="End Placement Probability for reference observations: Phred-scaled upper-bounds estimate of the probability of observing the deviation between EL and ER given E(EL/ER) ~ 0.5, derived using Hoeffding's inequality">
+##INFO=<ID=DPRA,Number=A,Type=Float,Description="Alternate allele depth ratio.  Ratio between depth in samples with each called alternate allele and those without.">
+##INFO=<ID=ODDS,Number=1,Type=Float,Description="The log odds ratio of the best genotype combination to the second-best.">
+##INFO=<ID=GTI,Number=1,Type=Integer,Description="Number of genotyping iterations required to reach convergence or bailout.">
+##INFO=<ID=TYPE,Number=A,Type=String,Description="The type of allele, either snp, mnp, ins, del, or complex.">
+##INFO=<ID=CIGAR,Number=A,Type=String,Description="The extended CIGAR representation of each alternate allele, with the exception that '=' is replaced by 'M' to ease VCF parsing.  Note that INDEL alleles do not have the first matched base (which is provided by default, per the spec) referred to by the CIGAR.">
+##INFO=<ID=NUMALT,Number=1,Type=Integer,Description="Number of unique non-reference alleles in called genotypes at this position.">
+##INFO=<ID=MEANALT,Number=A,Type=Float,Description="Mean number of unique non-reference allele observations per sample with the corresponding alternate alleles.">
+##INFO=<ID=LEN,Number=A,Type=Integer,Description="allele length">
+##INFO=<ID=MQM,Number=A,Type=Float,Description="Mean mapping quality of observed alternate alleles">
+##INFO=<ID=MQMR,Number=1,Type=Float,Description="Mean mapping quality of observed reference alleles">
+##INFO=<ID=PAIRED,Number=A,Type=Float,Description="Proportion of observed alternate alleles which are supported by properly paired read fragments">
+##INFO=<ID=PAIREDR,Number=1,Type=Float,Description="Proportion of observed reference alleles which are supported by properly paired read fragments">
+##INFO=<ID=MIN_DP,Number=1,Type=Integer,Description="Minimum depth in gVCF output block.">
+##INFO=<ID=END,Number=1,Type=Integer,Description="Last position (inclusive) in gVCF output record.">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=GQ,Number=1,Type=Float,Description="Genotype Quality, the Phred-scaled marginal (or unconditional) probability of the called genotype">
+##FORMAT=<ID=GL,Number=G,Type=Float,Description="Genotype Likelihood, log10-scaled likelihoods of the data given the called genotype for each possible genotype generated from the reference and alternate alleles given the sample ploidy">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
+##FORMAT=<ID=AD,Number=R,Type=Integer,Description="Number of observation for each allele">
+##FORMAT=<ID=RO,Number=1,Type=Integer,Description="Reference allele observation count">
+##FORMAT=<ID=QR,Number=1,Type=Integer,Description="Sum of quality of the reference observations">
+##FORMAT=<ID=AO,Number=A,Type=Integer,Description="Alternate allele observation count">
+##FORMAT=<ID=QA,Number=A,Type=Integer,Description="Sum of quality of the alternate observations">
+##FORMAT=<ID=MIN_DP,Number=1,Type=Integer,Description="Minimum depth in gVCF output block.">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	P1-RG	P2-RG	random-pool-RG	low-pool-RG
+I	11430	.	G	A	1438.17	.	DP=186;RO=122;AO=62;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	1/1:31:0:31	0/0:23:23:0	0/1:32:28:3	0/1:100:71:28
+I	21512	.	GAAAAAAAAAC	GAAAAAAAAC	1439.68	.	DP=74;RO=27;AO=47;CIGAR=1M1D9M;TYPE=del;	GT:DP:RO:AO	1/1:42:0:42	0/0:20:20:0	0/1:8:5:3	0/1:4:2:2
+I	29008	.	A	G	1943.12	.	DP=142;RO=75;AO=67;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	1/1:54:1:53	0/0:33:33:0	0/1:29:23:6	0/1:26:18:8
+I	31478	.	C	T	1244	.	DP=87;RO=45;AO=42;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:37:37:0	1/1:28:0:28	0/1:14:4:10	0/1:8:4:4
+I	46442	.	C	T	656.736	.	DP=66;RO=40;AO=26;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:36:36:0	1/1:23:0:23	0/1:5:4:1	1/1:2:0:2
+I	49376	.	G	A	1034.6	.	DP=86;RO=47;AO=39;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:34:34:0	1/1:27:1:26	0/1:10:5:5	0/1:15:7:8
+I	49412	.	G	T	1065.83	.	DP=92;RO=55;AO=37;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	1/1:32:1:31	0/0:33:33:0	0/1:9:7:2	0/1:18:14:4
+I	49413	.	A	T	1051.59	.	DP=91;RO=54;AO=37;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	1/1:32:1:31	0/0:32:32:0	0/1:9:7:2	0/1:18:14:4
+I	59756	.	G	A	1114.57	.	DP=84;RO=47;AO=37;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	1/1:35:0:35	0/0:36:36:0	0/0:8:8:0	0/1:5:3:2
+I	77683	.	C	T	1914.5	.	DP=114;RO=54;AO=59;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	1/1:53:0:53	0/0:40:40:0	0/1:10:6:4	0/1:11:8:2
+I	80943	.	C	T	958.444	.	DP=72;RO=39;AO=33;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:33:33:0	1/1:24:0:24	0/1:5:2:3	0/1:10:4:6
+I	91235	.	C	T	1040.46	.	DP=152;RO=102;AO=48;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	1/1:24:0:23	0/0:20:20:0	0/1:26:24:2	0/1:82:58:23
+I	97088	.	CGAGGCTGGTGCTCGCGGTGTTAGCCGCGAGATCGTGG	CG	177.374	.	DP=52;RO=31;AO=19;CIGAR=1M36D1M;TYPE=del;	GT:DP:RO:AO	0/0:25:23:1	1/1:10:0:10	0/0:8:6:1	0/1:9:2:7
+I	105111	.	C	T	293.736	.	DP=40;RO=26;AO=14;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:21:21:0	1/1:14:1:13	0/1:3:2:1	0/0:2:2:0
+I	118543	.	C	T	1023.33	.	DP=86;RO=42;AO=44;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:19:19:0	1/1:15:0:15	0/1:13:8:5	0/1:39:15:24
+I	125582	.	G	A	768.599	.	DP=76;RO=43;AO=33;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	1/1:32:0:32	0/0:26:26:0	0/1:4:3:1	0/0:14:14:0
+I	127606	.	G	C	705.196	.	DP=62;RO=30;AO=32;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:24:24:0	1/1:15:0:15	0/1:8:3:5	0/1:15:3:12
+I	129602	.	T	C	725.456	.	DP=82;RO=53;AO=29;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:46:46:0	1/1:13:0:13	0/1:12:4:8	0/1:11:3:8
+I	133045	.	T	C	1611.95	.	DP=88;RO=36;AO=52;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	1/1:43:0:43	0/0:17:17:0	0/1:16:11:5	0/1:12:8:4
+I	137002	.	A	G	1951.04	.	DP=124;RO=55;AO=67;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:36:36:0	1/1:40:0:40	0/1:26:9:17	0/1:22:10:10
+I	144233	.	GTTTTTTTTTTTTTTG	GTTTTTTTTTTTTTG	526.962	.	DP=62;RO=24;AO=23;CIGAR=1M1D14M;TYPE=del;	GT:DP:RO:AO	1/1:23:1:19	0/0:22:16:0	0/1:8:3:2	0/1:9:4:2
+I	150927	.	T	A	1624.92	.	DP=88;RO=35;AO=53;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	1/1:40:0:40	0/0:23:22:1	0/1:14:5:9	0/1:11:8:3
+I	165730	.	T	C	1293.17	.	DP=72;RO=29;AO=42;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	1/1:40:0:40	0/0:22:22:0	0/0:7:5:1	0/1:3:2:1
+I	173923	.	C	T	1168.87	.	DP=81;RO=41;AO=40;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:40:39:1	1/1:28:0:28	0/1:7:2:5	1/1:6:0:6
+I	175661	.	C	T	1332.93	.	DP=85;RO=42;AO=43;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	1/1:38:0:38	0/0:30:30:0	0/1:14:9:5	0/0:3:3:0
+I	178107	.	G	A	1210.78	.	DP=101;RO=55;AO=45;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:42:42:0	1/1:19:0:19	0/1:18:5:13	0/1:22:8:13
+I	182973	.	GAAAAAAAAAG	GAAAAAAAAG	625.805	.	DP=74;RO=46;AO=25;CIGAR=1M1D9M;TYPE=del;	GT:DP:RO:AO	0/0:29:28:0	1/1:13:0:13	0/1:13:7:5	0/1:19:11:7
+I	183057	.	CAAAAAAAAAAG	CAAAAAAAAAG	809.125	.	DP=85;RO=45;AO=37;CIGAR=1M1D10M;TYPE=del;	GT:DP:RO:AO	0/0:25:25:0	1/1:14:0:14	0/1:23:10:12	0/1:23:10:11
+I	190296	.	GGAAG	GGAAGAAG	1697.56	.	DP=127;RO=49;AO=72;CIGAR=1M3I4M;TYPE=ins;	GT:DP:RO:AO	0/0:21:21:0	1/1:25:1:24	0/1:19:6:12	0/1:62:21:36
+I	190313	.	GTCTCTCTCTCTCTCT	GTCTCTCTCTCT	1381.66	.	DP=110;RO=34;AO=67;CIGAR=1M4D11M;TYPE=del;	GT:DP:RO:AO	0/0:18:15:1	1/1:23:0:23	0/1:18:3:13	0/1:51:16:30
+I	190396	.	G	A	2725.39	.	DP=152;RO=55;AO=97;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:14:13:1	1/1:25:0:25	0/1:32:9:23	0/1:81:33:48
+I	190435	.	CAAAAAAG	CAAAAAAAG	2365.6	.	DP=151;RO=44;AO=96;CIGAR=1M1I7M;TYPE=ins;	GT:DP:RO:AO	0/0:11:10:0	1/1:23:0:23	0/1:39:10:24	0/1:78:24:49
+I	190590	.	CC	CCGACGCCGTCGCAGCTC	1778.79	.	DP=291;RO=167;AO=114;CIGAR=1M16I1M;TYPE=ins;	GT:DP:RO:AO	0/0:23:21:1	1/1:17:0:17	0/1:119:73:39	0/1:132:73:57
+I	190786	.	A	C	8520.95	.	DP=548;RO=203;AO=343;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:15:14:1	1/1:15:0:15	0/1:263:96:165	0/1:255:93:162
+I	190943	.	A	G	4630.83	.	DP=312;RO=126;AO=184;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:27:26:1	1/1:15:0:15	0/1:109:48:61	0/1:161:52:107
+I	191027	.	GCC	GCCC	2569.8	.	DP=196;RO=89;AO=103;CIGAR=1M1I2M;TYPE=ins;	GT:DP:RO:AO	0/0:31:30:1	1/1:18:0:16	0/1:59:28:30	0/1:88:31:56
+I	191855	.	ATTTTTTTTTA	ATTTTTTTTTTA	503.318	.	DP=77;RO=46;AO=27;CIGAR=1M1I10M;TYPE=ins;	GT:DP:RO:AO	0/0:31:29:0	1/1:10:0:10	0/1:19:9:9	0/1:17:8:8
+I	192552	.	G	T	1592.81	.	DP=119;RO=64;AO=55;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:49:49:0	1/1:29:0:29	0/1:17:6:11	0/1:24:9:15
+I	192836	.	G	A	1015.76	.	DP=71;RO=37;AO=34;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:34:34:0	1/1:17:0:17	1/1:9:1:8	0/1:11:2:9
+I	193932	.	G	C	1093.95	.	DP=106;RO=69;AO=36;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:59:59:0	1/1:28:0:28	0/1:11:7:3	0/1:8:3:5
+I	194123	.	C	T	1410.02	.	DP=94;RO=48;AO=46;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:40:40:0	1/1:36:0:36	0/1:7:4:3	0/1:11:4:7
+I	194204	.	C	T	1652.37	.	DP=102;RO=49;AO=53;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:40:40:0	1/1:32:0:32	0/1:12:4:8	0/1:18:5:13
+I	194698	.	C	T	1811.04	.	DP=107;RO=46;AO=61;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:40:40:0	1/1:46:0:46	0/1:12:5:7	1/1:9:1:8
+I	194757	.	T	C	1681.79	.	DP=103;RO=45;AO=58;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:39:39:0	1/1:44:0:44	0/1:13:6:7	1/1:7:0:7
+I	194844	.	A	G	1512.51	.	DP=84;RO=34;AO=50;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:31:31:0	1/1:34:0:34	0/1:12:2:10	1/1:7:1:6
+I	195166	.	ATGAATTGTGAATTGT	ATGAATTGT	508.053	.	DP=71;RO=40;AO=31;CIGAR=1M7D8M;TYPE=del;	GT:DP:RO:AO	0/0:34:33:1	1/1:24:0:24	0/1:8:6:2	0/1:5:1:4
+I	195254	.	G	A	1598.9	.	DP=120;RO=62;AO=58;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:52:51:1	1/1:41:0:41	0/1:17:8:9	0/1:10:3:7
+I	195334	.	G	T	1546.39	.	DP=104;RO=53;AO=51;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:42:42:0	1/1:37:0:37	0/1:13:7:6	0/1:12:4:8
+I	195726	.	G	A	1322.94	.	DP=77;RO=35;AO=42;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	1/1:38:0:38	0/0:22:22:0	0/0:11:10:1	0/1:6:3:3
+I	195934	.	G	A	958.552	.	DP=73;RO=40;AO=32;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:31:31:0	1/1:24:0:23	0/1:11:5:6	0/1:7:4:3
+I	196026	.	A	G	1278.87	.	DP=81;RO=37;AO=43;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:30:29:0	1/1:27:0:27	0/1:18:6:12	0/1:6:2:4
+I	196178	.	C	G	1096.14	.	DP=60;RO=25;AO=35;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:21:21:0	1/1:26:0:26	0/1:5:2:3	0/1:8:2:6
+I	196186	.	C	A	1124.25	.	DP=61;RO=25;AO=36;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:22:22:0	1/1:26:0:26	0/1:6:2:4	1/1:7:1:6
+I	196293	.	C	G	854.719	.	DP=67;RO=38;AO=29;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:29:29:0	1/1:20:0:20	0/1:10:7:3	0/1:8:2:6
+I	196327	.	T	C	930.748	.	DP=81;RO=49;AO=32;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:39:39:0	1/1:24:0:24	0/1:10:7:3	0/1:8:3:5
+I	196736	.	G	C	1594.69	.	DP=95;RO=46;AO=49;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:41:41:0	1/1:41:0:41	0/1:7:3:4	0/1:6:2:4
+I	196799	.	G	A	1345.42	.	DP=109;RO=65;AO=44;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:58:58:0	1/1:36:0:36	0/1:11:5:6	0/1:4:2:2
+I	196865	.	G	A	1222.84	.	DP=102;RO=57;AO=45;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:50:50:0	1/1:36:0:36	0/1:12:6:6	0/1:4:1:3
+I	197019	.	CAAAAAAT	CAAAAAAAT	1227.03	.	DP=93;RO=49;AO=42;CIGAR=1M1I7M;TYPE=ins;	GT:DP:RO:AO	0/0:48:46:1	1/1:35:0:34	0/1:5:2:3	0/1:5:1:4
+I	197171	.	CTT	CTTT	1162.52	.	DP=87;RO=47;AO=38;CIGAR=1M1I2M;TYPE=ins;	GT:DP:RO:AO	0/0:42:41:0	1/1:30:0:30	0/1:12:6:5	1/1:3:0:3
+I	197317	.	A	T	1131.88	.	DP=89;RO=52;AO=37;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:45:44:1	1/1:30:0:30	0/1:10:6:4	0/1:4:2:2
+I	197379	.	T	C	1552.71	.	DP=107;RO=56;AO=51;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:46:46:0	1/1:39:0:39	0/1:13:7:6	0/1:9:3:6
+I	197424	.	T	C	1601.81	.	DP=105;RO=52;AO=52;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:44:44:0	1/1:40:1:39	0/1:11:4:7	0/1:10:3:6
+I	197437	.	C	T	1840.15	.	DP=110;RO=52;AO=58;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:46:46:0	1/1:44:0:44	0/1:12:4:8	0/1:8:2:6
+I	197454	.	TGTGGGTCATAG	TG	874.309	.	DP=83;RO=42;AO=41;CIGAR=1M10D1M;TYPE=del;	GT:DP:RO:AO	0/0:36:36:0	1/1:30:0:30	0/1:9:4:5	0/1:8:2:6
+I	197511	.	T	C	1155.6	.	DP=88;RO=49;AO=39;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:38:38:0	1/1:29:0:29	0/1:12:7:5	0/1:9:4:5
+I	197519	.	C	T	1205.61	.	DP=91;RO=51;AO=39;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:40:40:0	1/1:30:0:30	0/1:12:7:5	0/1:9:4:4
+I	197520	.	A	G	1208.75	.	DP=91;RO=52;AO=39;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:40:40:0	1/1:30:0:30	0/1:12:8:4	0/1:9:4:5
+I	197536	.	C	T	926.36	.	DP=88;RO=55;AO=32;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:43:43:0	1/1:28:1:26	0/1:10:6:4	0/1:7:5:2
+I	197538	.	G	A	964.401	.	DP=87;RO=53;AO=34;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:42:42:0	1/1:28:0:28	0/1:10:6:4	0/1:7:5:2
+I	197562	.	AACATATAGTAGTAGG	AG	517.751	.	DP=57;RO=33;AO=23;CIGAR=1M14D1M;TYPE=del;	GT:DP:RO:AO	0/0:26:25:0	1/1:20:0:20	0/1:5:4:1	0/1:6:4:2
+I	197654	.	C	T	933.046	.	DP=81;RO=47;AO=33;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:33:33:0	1/1:25:0:24	0/1:13:9:4	0/1:10:5:5
+I	197691	.	GAAAAAAAAC	GAAAAAAAAAC	613.31	.	DP=73;RO=44;AO=28;CIGAR=1M1I9M;TYPE=ins;	GT:DP:RO:AO	0/0:30:29:0	1/1:20:0:20	0/1:17:11:6	0/1:6:4:2
+I	197721	.	TTGT	TT	664.569	.	DP=76;RO=44;AO=32;CIGAR=1M2D1M;TYPE=del;	GT:DP:RO:AO	0/0:24:23:1	1/1:23:1:22	0/1:18:14:4	0/1:11:6:5
+I	197772	.	ATCTCTCTCTCTCTCTCG	ATCTCTCTCTCTCTCG	600.41	.	DP=61;RO=33;AO=27;CIGAR=1M2D15M;TYPE=del;	GT:DP:RO:AO	0/0:26:25:1	1/1:16:0:15	0/1:10:5:5	0/1:9:3:6
+I	197811	.	A	G	972.406	.	DP=85;RO=49;AO=35;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:41:40:1	1/1:21:0:21	0/1:8:3:5	0/1:15:6:8
+I	197961	.	C	G	949.71	.	DP=85;RO=52;AO=33;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:36:35:1	1/1:25:0:25	0/1:9:6:3	0/1:15:11:4
+I	199556	.	T	C	1054.9	.	DP=78;RO=41;AO=36;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:32:32:0	1/1:26:0:26	0/1:13:7:5	0/1:7:2:5
+I	200011	.	T	C	1519.54	.	DP=101;RO=52;AO=49;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:45:45:0	1/1:30:0:30	1/1:9:1:8	0/1:17:6:11
+I	200785	.	C	G	1381.21	.	DP=80;RO=36;AO=44;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:30:30:0	1/1:33:0:33	0/1:11:4:7	0/1:6:2:4
+I	200986	.	CT	CTCTCCGTTCTATAT	372.876	.	DP=60;RO=39;AO=18;CIGAR=1M13I1M;TYPE=ins;	GT:DP:RO:AO	0/0:28:28:0	1/1:15:1:14	0/1:10:5:3	0/0:7:5:1
+I	201007	.	G	A	1126.49	.	DP=89;RO=47;AO=42;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:34:34:0	1/1:29:1:28	0/1:15:8:7	0/1:11:4:7
+I	201020	.	T	A	1125.38	.	DP=91;RO=47;AO=43;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:33:33:0	1/1:30:1:29	0/1:17:10:6	0/1:11:3:8
+I	201164	.	G	A	1111.8	.	DP=91;RO=53;AO=37;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:43:43:0	1/1:24:0:24	0/1:13:5:8	0/1:11:5:5
+I	201217	.	T	C	777.831	.	DP=77;RO=48;AO=29;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:33:33:0	1/1:21:1:20	0/1:9:6:3	0/1:14:8:6
+I	201262	.	A	C	840.405	.	DP=82;RO=48;AO=32;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:32:32:0	1/1:18:1:17	0/1:16:9:7	0/1:16:6:8
+I	201560	.	G	T	747.642	.	DP=78;RO=50;AO=28;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:34:34:0	1/1:12:0:12	0/1:20:12:8	0/1:12:4:8
+I	201819	.	A	C	975.253	.	DP=69;RO=35;AO=34;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:24:24:0	1/1:15:0:15	0/1:11:3:8	0/1:19:8:11
+I	201834	.	T	A	842.364	.	DP=74;RO=37;AO=35;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:28:28:0	1/1:19:0:19	0/1:11:2:8	0/1:16:7:8
+I	201853	.	AAAAGA	AA	422.966	.	DP=69;RO=35;AO=20;CIGAR=1M4D1M;TYPE=del;	GT:DP:RO:AO	0/0:27:27:0	1/1:14:0:10	0/1:13:2:6	0/1:15:6:4
+I	201862	.	G	A	995.236	.	DP=75;RO=39;AO=36;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:29:29:0	1/1:15:0:15	0/1:14:2:12	0/1:17:8:9
+I	201918	.	GTGGCTTGGCTTGGCTTGGCTC	GTGGCTTGGCTC	676.937	.	DP=75;RO=39;AO=35;CIGAR=1M10D11M;TYPE=del;	GT:DP:RO:AO	0/0:31:31:0	1/1:19:0:19	0/1:15:4:11	0/1:10:4:5
+I	202131	.	C	T	1876.39	.	DP=130;RO=63;AO=67;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:43:43:0	1/1:25:0:25	0/1:32:7:25	0/1:30:13:17
+I	202341	.	CT	CTCCTCCTCTT	792.449	.	DP=144;RO=88;AO=48;CIGAR=1M9I1M;TYPE=ins;	GT:DP:RO:AO	0/0:32:32:0	1/1:18:1:17	0/1:25:18:7	0/1:69:37:24
+I	202408	.	GTCTCTCTCTCTCTCTCTCTCTCT	GTCTCTCTCTCTCTCTCT	829.675	.	DP=127;RO=63;AO=51;CIGAR=1M6D17M;TYPE=del;	GT:DP:RO:AO	0/0:28:25:0	1/1:14:0:14	0/1:28:16:10	0/1:57:22:27
+I	202797	.	C	G	1191.59	.	DP=108;RO=63;AO=44;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:43:42:1	1/1:25:0:25	0/1:24:11:12	0/1:16:10:6
+I	202821	.	C	A	1490.64	.	DP=117;RO=64;AO=53;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:47:46:1	1/1:29:0:29	0/1:27:9:18	0/1:14:9:5
+I	202886	.	T	C	1655.77	.	DP=117;RO=59;AO=57;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:39:38:1	1/1:35:0:35	0/1:29:16:12	0/1:14:5:9
+I	203360	.	T	C	1622.38	.	DP=97;RO=44;AO=53;CIGAR=1X;TYPE=snp;	GT:DP:RO:AO	0/0:36:36:0	1/1:33:0:33	0/1:18:4:14	0/1:10:4:6
