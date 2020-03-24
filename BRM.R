@@ -457,8 +457,10 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 	    con1 <- which((pks$peak_y >= threshold | pks$peak_y <= -threshold) & pks$peak_y * k < 0);
 	    pks  <- pks[con1,];
 	    con2 <- c();
-	    for (i in 1:length(pks)){
-	    	ifex <- which(pks$left_x > pks$left_x[i] & pks$right_x < pks$right_x[i]);
+	    for (i in 1:length(pks$left_x)){
+	    	ileft  <- pks$left_x[i];
+	    	iright <- pks$right_x[i];
+	    	ifex   <- which((pks$left_x >= ileft & pks$right_x < iright) | (pks$left_x > ileft & pks$right_x <= iright));
 	    	if(length(ifex) > 0) con2 <- c(con2,i);
 	    }
 	    if(length(con2) > 0) pks <- pks[-con2,];
