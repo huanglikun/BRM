@@ -1,4 +1,0 @@
-n1 = 300
-n2 = 300
-t  = 0		# For DH or RI etc., t=0; F2 or F3 etc., t=1
-ua = 3.93	# For rice, F2:3.65; F3:3.74; F4:3.78 .
