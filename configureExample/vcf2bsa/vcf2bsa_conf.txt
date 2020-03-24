@@ -1,0 +1,9 @@
+# Samples in 2x2 Table
+# Bulk/Pool 1: the first sample
+Table2x2.pool1 = low-pool-RG
+# Bulk/Pool 2: the second sample
+Table2x2.pool2 = random-pool-RG
+# Parent 1
+Table2x2.parent1 = P1-RG
+# Parent 2
+Table2x2.parent2 = P2-RG
