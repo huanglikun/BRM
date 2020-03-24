@@ -1,0 +1,9 @@
+#
+precision = 1e-13
+k         = 2            # k=0(RIL) k=1(H/DH) k=2(F2) k=3(F3) k=4(F4) k>4(F5,F6...)
+#
+chrNum         = 12      # chromosome number
+geneticLength  = 1530    # Genome size (cM)
+#genomeSize    = 382      # Genome size (Mb)
+#ratio         = 249.7     # Ratio (kb/cM)
+
