@@ -45,11 +45,11 @@ cd BRM
 # Usage: 
 # Rscript BRM.R <Block regression mapping configuration file> <Chromosome length file> <Input data in bsa format>
 # Design A
-Rscript BRM.R configureExample/designA/BRM_conf.txt configureExample/chr_length.txt dataExample/designA/yeast_markers_dp10.bsa
-# Design B (the experiment which have a high extreme pool and a random pool)
-Rscript BRM.R configureExample/designBH/BRM_conf.txt configureExample/chr_length.txt dataExample/designBH/yeast_markers_dp10.bsa
-# Design B (the experiment which have a low extreme pool and a random pool)
-Rscript BRM.R configureExample/designBL/BRM_conf.txt configureExample/chr_length.txt dataExample/designBL/yeast_markers_dp10.bsa
+Rscript BRM.R configureExample/designA/BRM_conf.txt configureExample/chr_length.tsv dataExample/designA/yeast_markers_dp10.bsa
+# Design B (the experiment which has a high selected pool and a random pool)
+Rscript BRM.R configureExample/designBH/BRM_conf.txt configureExample/chr_length.tsv dataExample/designBH/yeast_markers_dp10.bsa
+# Design B (the experiment which has a low selected pool and a random pool)
+Rscript BRM.R configureExample/designBL/BRM_conf.txt configureExample/chr_length.tsv dataExample/designBL/yeast_markers_dp10.bsa
 ```
  [back to top](#top)
  
@@ -113,7 +113,7 @@ Note: a, b, c and d stand for the counts of marker allele of PARENT 1 in pool 1 
   | Result2_File | File path | To define the result 2 output path (optional) | Default: result/result2.xls |
     
   * ### <a name="inputconfblkexample"></a>Example
-      **configureExample/BRM_conf.txt**
+      **configureExample/designBL/BRM_conf.txt**
 
           # version 0.2
 
@@ -124,11 +124,11 @@ Note: a, b, c and d stand for the counts of marker allele of PARENT 1 in pool 1 
           t        = 0        # For DH or RI etc., t=0; F2 or F3 etc., t=1
           ua       = 4.08     # For rice, F2:3.65; F3:3.74; F4:3.78.
 
-          # Step 1 : block regression
+          # Block regression
           UNIT     = 1000     # block unit(bp)
           DEG      = 2        # The degree of the polynomials to be used in Local Polynomial Regression Fitting.
           BLK      = 0.2      # block size = BLK * UNIT
-          MIN      = 10       # min depth in block
+          MIN      = 10       # min total depth in block
           MINVALID = 10       # min valid blocks in one chromosome (needed to be at least 10)
 
           # output file determination (optional)
@@ -220,14 +220,14 @@ Note: a, b, c and d stand for the counts of marker allele of PARENT 1 in pool 1 
 
         | Key | Value type | Description | Recommend value | 
         | --- | --- | --- | --- |
-        | precision | Float | Precision for numercial calculation. | Default: 1e-13 |
+        | precision | Float | Precision for numerical calculation. | Default: 1e-13 |
         | k | Integer | Generation. <br>k=0 means RIL<br>k=1 means H/DH<br>k=2 means F<sub>2</sub><br>k=3 means F<sub>3</sub><br>k=4 means F<sub>4</sub><br>k>4 means F<sub>5</sub>, F<sub>6</sub> ..., and is considered as RIL. | Depending on experimental design |
-        | chrNum | Interger | Chromosome number. | depending on species |
-        | geneticLength | Integer | Approximatedly total genetic distance of the species, the unit is cM. comment this by "#" to use parameters below instead. | Depending on species |
-        | genomeSize | Float | Genome size of the species, the unit is Mb. (optional) | Depending on speceis |
+        | chrNum | Integer | Chromosome number. | Depending on species |
+        | geneticLength | Integer | Approximately total genetic distance of the species, the unit is cM. Comment this by "#" to use parameters below instead. | Depending on species |
+        | genomeSize | Float | Genome size of the species, the unit is Mb. (optional) | Depending on species |
         | ratio | Float | Physical distance/Genetic distance ratio (kb/cM). (optional) | Depending on species |
 
-      * #### Rseult
+      * #### Result
 
         The <i>u</i><sub>α/2</sub> will be displayed as ua on the screen:
 
@@ -294,14 +294,14 @@ Note: a, b, c and d stand for the counts of marker allele of PARENT 1 in pool 1 
 
         | Key | Value type | Description | Recommend value | 
         | --- | --- | --- | --- |
-        | precision | Float | Precision for numercial calculation. | Default: 1e-13 |
+        | precision | Float | Precision for numerical calculation. | Default: 1e-13 |
         | k | Integer | Generation, e.g. k=6 means R<sub>6</sub> for diploid or H<sub>6</sub> for haploid. | Depending on experimental design |
-        | chrNum | Interger | Chromosome number. | depending on species |
-        | geneticLength | Integer | Approximatedly total genetic distance of the species, the unit is cM. comment this by "#" to use parameters below instead. | Depending on species |
-        | genomeSize | Float | Genome size of the species, the unit is Mb. (optional) | Depending on speceis |
+        | chrNum | Integer | Chromosome number. | Depending on species |
+        | geneticLength | Integer | Approximately total genetic distance of the species, the unit is cM. Comment this by "#" to use parameters below instead. | Depending on species |
+        | genomeSize | Float | Genome size of the species, the unit is Mb. (optional) | Depending on species |
         | ratio | Float | Physical distance/Genetic distance ratio (kb/cM). (optional) | Depending on species |
 
-      * #### Rseult
+      * #### Result
 
         The <i>u</i><sub>α/2</sub> will be displayed as ua on the screen:
 
@@ -323,7 +323,7 @@ Note: a, b, c and d stand for the counts of marker allele of PARENT 1 in pool 1 
 
   This file contains one line to show the theoretical threshold (assuming AF = 0.5 in the population) and a 11 columns table following. The AF is defined by the allele from Parent 1.
 
-  The data tabe described as below:
+  The data table described as below:
 
   | Column | Heading | Description |
   | :---: | --- | --- |
@@ -384,28 +384,28 @@ Note: a, b, c and d stand for the counts of marker allele of PARENT 1 in pool 1 
 ## <a name="qa"></a>Q&A
 1. <a name="vcf2bsa"></a>**If I have the VCF file generated by Freebayes/GATK, how can I transfer the VCF into BSA format?**
   
-    We provide a perl script that can transfer the VCF file into BSA file.
+    A perl script is provided for transforming the VCF format into BSA format.
 
       #### Quick start
 
       ```bash
       # Usage:
       # perl tools/vcf2bsa.pl <samples information file> <markers.vcf> <output file>
-      perl tools/vcf2bsa.pl configureExample/vcf2bsa_conf.txt dataExample/markers.freebayes.vcf result/markers.bsa
+      perl tools/vcf2bsa.pl configureExample/vcf2bsa/vcf2bsa_conf.txt dataExample/vcf2bsa/markers.freebayes.vcf result/markers.bsa
       ```
       
       #### Example
-      **configureExample/vcf2bsa_conf.txt**
+      **configureExample/vcf2bsa/vcf2bsa_conf.txt**
         
         # Samples in 2x2 Table
         # Bulk/Pool 1: the first sample
-        Table2x2.s1 = low-pool-RG
+        Table2x2.pool1 = low-pool-RG
         # Bulk/Pool 2: the second sample
-        Table2x2.s2 = random-pool-RG
+        Table2x2.pool2 = random-pool-RG
         # Parent 1
-        Table2x2.p1 = P1-RG
+        Table2x2.parent1 = P1-RG
         # Parent 2
-        Table2x2.p2 = P2-RG
+        Table2x2.parent2 = P2-RG
 
       It's a **key-value** file contains samples relationship. The separator is "=". And the space between key and value will be ignored. There are four parameters needed to be set:
 
@@ -416,7 +416,7 @@ Note: a, b, c and d stand for the counts of marker allele of PARENT 1 in pool 1 
       | Table2x2.parent1 | String | High phenotype value parent sample RG tag in VCF file. |
       | Table2x2.parent2 | String | Low phenotype value parent sample RG tag in VCF file. |
 
-      RG tag is the “Read Group” setting at the sequencing reads mapping step. For example, the -R parameter value in BWA.
+      RG tag is the “Read Group” setting at the reads mapping step. For example, the -R parameter value in BWA.
 
       If one parent is missing, the script will consider the genotype different from the known parent sample as the other parent genotype. If both parents are missing, the script will consider the reference genotype as the known parent genotype.
 
