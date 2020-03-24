@@ -1,0 +1,9 @@
+#
+precision = 1e-13
+k         = 6
+#
+chrNum         = 16      # chromosome number
+geneticLength  = 4900    # Genome size (cM)
+#genomeSize    = 12      # Genome size (Mb)
+#ratio         = 2.5     # Ratio (kb/cM)
+
