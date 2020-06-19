@@ -40,8 +40,9 @@ read_conf <- function(file_conf){
 #
 create_dir <- function(dir){
   if (file.exists(dir)){
-    cat(dir," already exists.\n");
+    # cat(dir," already exists.\n");
   }else{
+    cat("Creating ",dir," ...\n");
     tryCatch({dir.create(dir,recursive=T)},warning=function(w){s <- as.character(w);stop(s)},error=function(e){s <- as.character(e);stop(s)});
   }
 }
@@ -86,9 +87,9 @@ chk_conf <- function(conf){
 # block's middle position 
 def_block_pos <- function(chr, size){
 	# block number
-	n <- as.integer(2*chr/size)+2;
+	n <- as.double(2*chr/size)+2;
 	if( n%%2 != 0 ) n <- n+1;
-	n <- as.integer(n/2);
+	n <- as.double(n/2);
 	# block index and the middle position of each block
 	i <- c(1:n);
 	pos <- (i-1)*size+floor(size/2); # middle position
@@ -101,7 +102,7 @@ cal_block_meta <- function(loc, val, chr, size, depth, MIN){
 	# input: location vector, value vector
 	# input: chr length, block size, location depth vector
 	pos <- def_block_pos(chr, size);
-	idx <- as.integer(0.5+loc/size)+1;
+	idx <- as.double(0.5+loc/size)+1;
 	#
 	avg <- c();
 	blockDepth <- c();
@@ -162,7 +163,6 @@ run_step1 <- function(conf,file_chrlen,file_bsa,file_out,statistic){
 	    result <- optimize(fn, span.range);
 	    return(list(span = result$minimum, criterion = result$objective));
 	}
-
 	# return
 	fit_model <- list();
 	# global options
@@ -175,7 +175,7 @@ run_step1 <- function(conf,file_chrlen,file_bsa,file_out,statistic){
 	if(MINVALID < 10) MINVALID <- 10;
 	# read into memory
 	tab <- read.table(file_bsa, as.is=TRUE);
-	chr <- read.table(file_chrlen, as.is=TRUE);
+	chro <- read.table(file_chrlen, as.is=TRUE);
 	#
 	dat_chr <- tab[,1];
 	dat_pos <- tab[,2];
@@ -200,26 +200,27 @@ run_step1 <- function(conf,file_chrlen,file_bsa,file_out,statistic){
 	pool1Depth <- A + B;
 	pool2Depth <- C + D;
 	#
-	cat("Number of imported chromosomes is", length(chr[,1]), ".\n");
-	for(i in 1:length(chr[,1])){
+	cat("Number of imported chromosomes is", length(chro[,1]), ".\n");
+	for(i in 1:length(chro[,1])){
 		dat_chr <- dat_all_chr;
 		dat_pos <- dat_all_pos;
-		idx <- which(dat_chr == chr[i,1]);
+		idx <- which(dat_chr == chro[i,1]);
 		total <- length(idx);
-		cat("Data size of", chr[i,1], "is", total, ".\n");
+		cat("Data size of", chro[i,1], "is", total, ".\n");
 		if(total==0) next;
-		#
-		block_af1 <- cal_block_meta(dat_pos[idx], A[idx], chr[i, 2], BLK, pool1Depth[idx], MIN);
-		block_af2 <- cal_block_meta(dat_pos[idx], C[idx], chr[i, 2], BLK, pool2Depth[idx], MIN);
-
 		# initialize
 		block <- list();
 		#
-		if(statistic=="AF1") {
-			block <- block_af1;
+		if (statistic=="AF1") {
+			block <- cal_block_meta(dat_pos[idx], A[idx], chro[i, 2], BLK, pool1Depth[idx], MIN);
 		}else if (statistic=="AF2") {
-			block <- block_af2;
-		}else if (statistic=="AFD") {
+			block <- cal_block_meta(dat_pos[idx], C[idx], chro[i, 2], BLK, pool2Depth[idx], MIN);
+		}else{
+			block_af1 <- cal_block_meta(dat_pos[idx], A[idx], chro[i, 2], BLK, pool1Depth[idx], MIN);
+			block_af2 <- cal_block_meta(dat_pos[idx], C[idx], chro[i, 2], BLK, pool2Depth[idx], MIN);
+		}
+		#
+		if (statistic=="AFD") {
 		    if (conf$Design == "BL"){
 		      block$avg <- block_af2$avg - block_af1$avg;
 		    }else{
@@ -231,14 +232,14 @@ run_step1 <- function(conf,file_chrlen,file_bsa,file_out,statistic){
 			block$avg <- (block_af1$avg + block_af2$avg) / 2;
 			block$pos <- block_af1$pos;
 			block$num <- block_af1$num;
-		}else{
+		}else if (statistic!="AF1" & statistic!="AF2"){
 			stop("No statistic definded.");
 		}
 		#
 		x <- as.numeric(block$pos);
 		y <- as.numeric(block$avg);
 		jdx <- which(!is.na(y));
-		cat("Total blocks in ", chr[i,1], ": ", length(x), "\n", sep="");
+		cat("Total blocks in ", chro[i,1], ": ", length(x), "\n", sep="");
 		cat("Number of valid block:", length(jdx), "\n");
 		# only consider those chromosomes that have at least MINVALID valid blocks
 		if(length(jdx)<MINVALID) next;
@@ -262,7 +263,7 @@ run_step1 <- function(conf,file_chrlen,file_bsa,file_out,statistic){
 		if(statistic=="AF2")     value <- ifelse(value <  0,     0, value);
 		if(statistic=="AF2")     value <- ifelse(value >  1,     1, value);
 		####################################
-		dat_chr <- rep(chr[i,1], length(block$pos));
+		dat_chr <- rep(chro[i,1], length(block$pos));
 		dat_pos <- block$pos;
 		dat_avg <- round(block$avg,4);
 		fit_avg <- round(value,4);
@@ -305,17 +306,13 @@ run_step2 <- function(conf,data_aaf,data_af1,data_af2,file_out){
 }
 
 #
-return_cross_pos <- function(all_plots, x1, x2, y, tol){
-	subregion  <- all_plots[which(all_plots[,1]>x1 & all_plots[,1]<x2),];
-	y_distance <- abs(subregion[,2] - y);
-	pos        <- subregion[which(y_distance==min(y_distance) & y_distance<tol),1];
-}
-
-#
 run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,fit_model_af2,threshold){
-	# fixed global options
-	tol <- 0.01 # tolerance threshold
+	#
 	threshold <- as.numeric(threshold);
+  	#
+  	N1 <- as.numeric(conf$n1); # number of pool 1
+  	N2 <- as.numeric(conf$n2); # number of pool 2
+  	T  <- as.numeric(conf$t);  # level of population. For DH or RI etc., T=0; F2 or F3 etc., T=1
 	#
 	opt.span <- function(model, criterion = c("aicc", "gcv"), span.range = c(0.05, 0.95)) {
 	  as.crit <- function(x) {
@@ -335,7 +332,6 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 	  result <- optimize(fn, span.range);
 	  return(list(span = result$minimum, criterion = result$objective));
 	}
-
 	#
 	locfit_by_loess <- function(x, y){
 	  # loess+AICc
@@ -343,128 +339,178 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 	  span1 <- opt.span(fit0, criterion="aicc")$span
 	  fit1  <- loess(y~x, degree=2, span=span1)
 	}
-
-  	#
-  	N1 <- as.numeric(conf$n1); # number of pool 1
-  	N2 <- as.numeric(conf$n2); # number of pool 2
-  	T  <- as.numeric(conf$t);  # level of population. For DH or RI etc., T=0; F2 or F3 etc., T=1
-	# one-by-one for every chromosome
+	# write title to file
 	chrom   <- c("#Chr.");
 	peak_x  <- c("Pos.");
 	peak_y  <- c("Val.");
 	type    <- c("Peak Dir.");
 	left_x  <- c("Start");
 	right_x <- c("End");
-	# title write to file
 	out <- data.frame(chrom, peak_x, peak_y, type, left_x, right_x);
 	write.table(out, file_out, row.names=FALSE, col.names=FALSE, quote=FALSE, sep="\t", append=FALSE);
 	#
 	dat_chr <- dat_afd[,1];
 	dat_pos <- dat_afd[,2];
 	dat_avg <- dat_afd[,3];
+	fit_avg <- dat_afd[,4];
 	#
 	dat_std <- sqrt(dat_var[,6]);
 	qtl_std <- sqrt(dat_var[,8]);
 	#
-	chr     <- data.frame(unique(dat_chr));
+	chro     <- data.frame(unique(dat_chr));
+	# one-by-one for every chromosome
 	#
-	for(i in 1:length(chr[,1])){
-	    thischr <- chr[i,1];
-	    idx <- which(dat_chr == chr[i,1] & !is.na(dat_avg));
+	for(i in 1:length(chro[,1])){
+	    thischr <- chro[i,1];
+	    idx <- which(dat_chr == chro[i,1] & !is.na(dat_avg));
 	    total <- length(idx);
-	    cat("data size of", chr[i,1], "is", total, "\n");
+	    cat("data size of", chro[i,1], "is", total, "\n");
 	    if(total==0) next;
 	    #
 	    x <- dat_pos[idx];
 	    y <- dat_avg[idx];
+		fity <- fit_avg[idx];
 	    std  <- dat_std[idx];
 	    qstd <- qtl_std[idx];
-	    fit1 <- locfit_by_loess(x, y);
-	    #
-	    newx <- seq(x[1],x[length(x)],1);
-	    newx_len <- length(newx);
-	    plo  <- data.frame(x=newx, y=predict(fit1, newx));
-	    peakxs   <- newx[which(diff(diff(plo$y)>0)!=0L)+1L];
-	    len  <- length(peakxs);
-	    # 
+	    fit2 <- locfit_by_loess(x, y);
+		#
+		peakxs_allidx <- which(diff(diff(fity)>0)!=0L)+1L;
+		peakxs_flt0<- which(abs(fity[peakxs_allidx])>threshold);
+		if(length(peakxs_flt0)==0) next;
+		peakxs_idx <- peakxs_allidx[peakxs_flt0];
+		peakallxs<- x[peakxs_allidx];
+	    peakxs   <- x[peakxs_idx];
+	    len  <- length(peakallxs);
+		approx_peaks <- peakxs;
+		appr_peaks_y <- fity[peakxs_idx];
+		x_pool <- approx_peaks;
+		y_pool <- appr_peaks_y;
+		#
+		ylength <- length(fity);
+		xlength <- length(x);
+		# left
+		lefts <- (c(x[1],peakallxs[1:len-1]) + peakallxs) / 2;
+		# right
+		rights <- (peakallxs + c(peakallxs[2:len],x[xlength])) / 2;
+		#
+		idx_pass <- c();
+		# 
 	    if (len==0){
-	      k  <- ifelse(diff(c(plo$y[1],plo$y[length(plo)]))>0L,1L,-1L);
-	      ifelse(k>0L,k <- c(1L,-1L),k <- c(-1L,1L));
-	      pks <- data.frame(peak_x=c(plo$x[1],plo$x[length(plo$x)]),peak_y=c(plo$y[1],plo$y[length(plo$y)]),type=k);
-	      peak_std   <- c(qstd[1],qstd[length(qstd)]);
+	      k         <- ifelse(diff(c(fity[1],fity[ylength]))>0L,1L,-1L);
+	      k         <- ifelse(k>0L,c(1L,-1L),c(-1L,1L));
+	      pks       <- data.frame(peak_x=c(x[1],x[xlength]),peak_y=c(fity[1],fity[ylength]),type=k);
+	      peak_std  <- c(qstd[1],qstd[xlength]);
 	    }else{
-	      k    <- diff(diff(plo$y)>0L);
-	      k    <- k[which(k!=0L)];
-	      stat     <- k[1]>0;
-	      stat0    <- stat;
-	      
-	      peakxs   <- (peakxs[1:len-1]+peakxs[2:len])/2;
-	      
-	      pks  <- sapply(as.data.frame(rbind(c(newx[1],peakxs), c(peakxs,newx[length(newx)]))),
-	                     function(k){ 
-	                     	stat <<- !stat;
+	      k         <- diff(fity)>0L;
+		  x1k       <- ifelse(k[1]==TRUE,1L,-1L);
+		  xlastk    <- ifelse(k[length(k)],-1L,1L);
+		  k         <- diff(k);
+		  #
+	      k         <- k[which(k!=0L)];
+		  k         <- k[peakxs_flt0];
+		  k_flt_idx <- which(appr_peaks_y*k<0);
+		  if(length(k_flt_idx)==0) next;
+	      #
+		  peakxs_idx    <- peakxs_idx[k_flt_idx];
+		  appr_peaks_y  <- appr_peaks_y[k_flt_idx];
+		  y_pool        <- appr_peaks_y;
+		  x_pool        <- x_pool[k_flt_idx];
+		  k             <- k[k_flt_idx];
+		  m             <- k<0;
+		  lefts         <- lefts[peakxs_flt0[k_flt_idx]];
+		  rights        <- rights[peakxs_flt0[k_flt_idx]];
+	      #
+	      pks  <- sapply(as.data.frame(rbind(lefts, rights,m)),
+	                     function(r){ 
 	                        optimize(f=function(x){
-	                        	predict(fit1, newdata=data.frame(x))}, 
-	                     	maximum=stat, interval=k)});
+	                        	predict(fit2, newdata=data.frame(x))},  # if let fit_afd = fit(obs_af1-obs_af2)
+	                        	# predict(fit_model_af1[[ i ]],x) - predict(fit_model_af2[[ i ]],x)},  # if let fit_afd = fit_af1 - fit_af2
+	                     	maximum=r[3], interval=r[c(1,2)])});
 	      pks  <- as.data.frame(t(pks));
 	      names(pks) <- c("peak_x","peak_y");
-	      pks$peak_x <- as.numeric(pks$peak_x);
-	      pks$peak_y <- as.numeric(pks$peak_y);
+	      pks$peak_x <- trunc(as.numeric(pks$peak_x));
+	      pks$peak_y <- round(as.numeric(pks$peak_y),4);
+		  pks$peak_y <- ifelse(pks$peak_y > 1, 1, pks$peak_y);
+		  pks$peak_y <- ifelse(pks$peak_y < -1, -1, pks$peak_y);
 	      pks$type   <- k;
 	      peak_af1   <- predict(fit_model_af1[[ i ]],pks$peak_x);
 	      peak_af2   <- predict(fit_model_af2[[ i ]],pks$peak_x);
+		  #
+		  peak_af1   <- ifelse(peak_af1 < 0, 0, peak_af1);
+		  peak_af2   <- ifelse(peak_af2 < 0, 0, peak_af2);
+		  #
 	      peak_std   <- as.numeric(sqrt(peak_af1 * (1 - peak_af1) / (2^T * N1) + peak_af2 * (1 - peak_af2) / (2^T * N2)));
-		  # add the first and the last position.
-		  firstPos   <- c(plo$x[1],plo$y[1],-1*pks$type[1]);
-		  lastPos    <- c(plo$x[length(plo$x)],plo$y[length(plo$y)],-1*pks$type[length(pks$type)]);
-		  pks        <- rbind(firstPos, pks, lastPos);
-		  peak_std   <- c(qstd[1],peak_std,qstd[length(qstd)]);
-		  k          <- pks$type;
+		  # check if the first pos is a peak
+		  if (abs(fity[1])>abs(threshold) & fity[1] * x1k < 0){
+			  p1       <- c(x[1],fity[1],x1k);
+			  pks      <- rbind(p1,pks);
+			  peak_std <- c(qstd[1],peak_std);
+			  y_pool   <- c(fity[1],y_pool);
+			  x_pool   <- c(x[1],x_pool);
+			  peakxs_idx <- c(1,peakxs_idx);
+		  }
+		  # check if the last pos is a peak
+		  if (abs(fity[ylength])>abs(threshold) & fity[ylength] * xlastk < 0){
+			  plast    <- c(x[ylength],fity[ylength],xlastk);
+			  pks      <- rbind(pks,plast);
+			  peak_std <- c(peak_std,qstd[ylength]);
+			  y_pool   <- c(y_pool,fity[ylength]);
+			  x_pool   <- c(x_pool,x[xlength]);
+			  peakxs_idx <- c(peakxs_idx,ylength);
+		  }
+		  #
+		  all_ident_y    <- pks$peak_y + pks$type*1.65*peak_std;
 		}
-	    all_peak_plots <- pks$peak_x;
-	    all_ident_y    <- pks$peak_y + k*1.65*peak_std;
-	    all_x1         <- all_peak_plots[1:(length(all_peak_plots)-1)];
-	    all_x3         <- floor(all_peak_plots[1:(length(all_peak_plots)-1)]);
-	    all_x2         <- all_peak_plots[2:(length(all_peak_plots))];
-	    all_x4         <- all_peak_plots[2:length(all_peak_plots)];
-	    pos1_list <- c(x[1]);
-	    pos2_list <- c();
-	    all_x1_len<- length(all_x1);
-	    for (i in 1:all_x1_len){
-	  		pos1     <- return_cross_pos(plo, all_x1[i], all_x2[i], all_ident_y[i+1], tol);
-	  		j        <- i ;
-	  		while(j > 1 & length(pos1) == 0){
-	  			j    <- j - 1;
-	  			pos1 <- return_cross_pos(plo, all_x1[j], all_x2[i], all_ident_y[i+1], tol);
-	  		}
-	  		pos2     <- return_cross_pos(plo, all_x3[i], all_x4[i], all_ident_y[i], tol);
-	  		j <- i;
-	  		while(j < all_x1_len & length(pos2) == 0){
-	  			j <- j + 1;
-	  			pos2 <- return_cross_pos(plo, all_x3[i], all_x4[j], all_ident_y[i], tol);
-	  		}
-	      	if (length(pos1) == 0) {pos1 <- c(all_x1[1]);respos1 <- pos1;}
-	      	if (length(pos2) == 0) {pos2 <- c(all_x4[length(all_x4)]);respos2 <- pos2;}
-	      	pos1_list   <- c(pos1_list,pos1);
-	      	pos2_list   <- c(pos2_list,pos2);
-	    }
-	    pos2_list     <- c(pos2_list,x[length(x)]);
-	    pks$type      <- ifelse(k==1,"-","+");
-      	pks$peak_x    <- trunc(pks$peak_x);
-      	pks$peak_y    <- round(pks$peak_y,4);
-	    pks <-data.frame(thischr, pks,left_x=c(pos1_list), right_x=c(pos2_list));
-	    #
-	    con1 <- which((pks$peak_y >= threshold | pks$peak_y <= -threshold) & pks$peak_y * k < 0);
-	    pks  <- pks[con1,];
-	    con2 <- c();
-	    for (i in 1:length(pks$left_x)){
-	    	ileft  <- pks$left_x[i];
-	    	iright <- pks$right_x[i];
-	    	ifex   <- which((pks$left_x >= ileft & pks$right_x < iright) | (pks$left_x > ileft & pks$right_x <= iright));
-	    	if(length(ifex) > 0) con2 <- c(con2,i);
-	    }
-	    if(length(con2) > 0) pks <- pks[-con2,];
-	    write.table(pks, file_out, row.names=FALSE, col.names=FALSE, quote=FALSE, sep="\t", append=TRUE);
+		#
+		peak_flt1   <- c();
+		pos1_list   <- c();
+		pos2_list   <- c();
+		fltlen      <- length(pks$peak_x);
+		while(length(idx_pass) < fltlen){
+			# find max
+			max_idx    <- which(abs(y_pool)==max(abs(y_pool)));
+			peak_flt1  <- c(peak_flt1, max_idx);
+			interval_i <- peakxs_idx[max_idx];
+			# pos1
+			if(interval_i == 1){
+				pos1_x     <- x[1];
+			}else{
+				while(interval_i > 2 & (fity[interval_i]-all_ident_y[max_idx])*(fity[interval_i-1]-all_ident_y[max_idx]) > 0){
+					interval_i <- interval_i - 1;
+					if((fity[interval_i]-all_ident_y[max_idx])*(fity[interval_i-1]-all_ident_y[max_idx]) < 0) break;
+				}
+				distance_x1x2  <- x[interval_i] - x[interval_i-1];
+				dis1_y1        <- abs(fity[interval_i-1]-all_ident_y[max_idx]);
+				dis1_y2        <- abs(fity[interval_i]-all_ident_y[max_idx]);
+				pos1_x         <- x[interval_i-1]+(distance_x1x2)*(dis1_y1/(dis1_y1+dis1_y2));
+			}
+			pos1_list      <- c(pos1_list,pos1_x);
+			interval_i     <- peakxs_idx[max_idx];
+			# pos2
+			if(interval_i == xlength){
+				pos2_x     <- x[xlength];
+			}else{
+				while(interval_i < xlength - 2 & (fity[interval_i]-all_ident_y[max_idx])*(fity[interval_i+1]-all_ident_y[max_idx]) > 0){
+					interval_i <- interval_i + 1;
+					if((fity[interval_i]-all_ident_y[max_idx])*(fity[interval_i+1]-all_ident_y[max_idx]) < 0) break;
+				}
+				distance_x1x2  <- x[interval_i+1] - x[interval_i];
+				dis2_y1        <- abs(fity[interval_i]-all_ident_y[max_idx]);
+				dis2_y2        <- abs(fity[interval_i+1]-all_ident_y[max_idx]);
+				pos2_x         <- x[interval_i]+(distance_x1x2)*(dis2_y1/(dis2_y1+dis2_y2));
+			}
+			pos2_list      <- c(pos2_list,pos2_x);
+			# loop until pass all candidate peaks
+			flt_region_idx <- which(x_pool >= pos1_x & x_pool <= pos2_x);
+			idx_pass       <- unique(c(idx_pass,flt_region_idx));
+			y_pool[idx_pass] <- 0;
+		}
+		pks <- pks[sort(peak_flt1),];
+		pks <- data.frame(thischr, pks,left_x=c(trunc(pos1_list)), right_x=c(trunc(pos2_list)));
+		peak_flt2 <- which((pks$peak_y >= threshold | pks$peak_y <= -threshold) & pks$peak_y * pks$type < 0);
+		pks <- pks[peak_flt2,];
+		pks$type <- ifelse(pks$type==1,"-","+");
+		write.table(pks, file_out, row.names=FALSE, col.names=FALSE, quote=FALSE, sep="\t", append=TRUE);
 	}
 }
 
