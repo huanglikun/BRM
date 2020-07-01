@@ -1,6 +1,6 @@
 #!/usr/bin/env RScript
 
-# version 0.3
+# version 0.2
 ##############################################
 # command
 ##############################################
@@ -40,9 +40,8 @@ read_conf <- function(file_conf){
 #
 create_dir <- function(dir){
   if (file.exists(dir)){
-    # cat(dir," already exists.\n");
+    cat(dir," already exists.\n");
   }else{
-    cat("Creating ",dir," ...\n");
     tryCatch({dir.create(dir,recursive=T)},warning=function(w){s <- as.character(w);stop(s)},error=function(e){s <- as.character(e);stop(s)});
   }
 }
@@ -87,9 +86,9 @@ chk_conf <- function(conf){
 # block's middle position 
 def_block_pos <- function(chr, size){
 	# block number
-	n <- as.double(2*chr/size)+2;
+	n <- as.integer(2*chr/size)+2;
 	if( n%%2 != 0 ) n <- n+1;
-	n <- as.double(n/2);
+	n <- as.integer(n/2);
 	# block index and the middle position of each block
 	i <- c(1:n);
 	pos <- (i-1)*size+floor(size/2); # middle position
@@ -102,7 +101,7 @@ cal_block_meta <- function(loc, val, chr, size, depth, MIN){
 	# input: location vector, value vector
 	# input: chr length, block size, location depth vector
 	pos <- def_block_pos(chr, size);
-	idx <- as.double(0.5+loc/size)+1;
+	idx <- as.integer(0.5+loc/size)+1;
 	#
 	avg <- c();
 	blockDepth <- c();
@@ -403,10 +402,9 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 	    }else{
 	      k         <- diff(fity)>0L;
 		  x1k       <- ifelse(k[1]==TRUE,1L,-1L);
-		  xlastk    <- ifelse(k[length(k)],-1L,1L);
-		  k         <- diff(k);
+		  xlastk    <- ifelse(k[length(k)],1L,-1L);
 		  #
-	      k         <- k[which(k!=0L)];
+	      k         <- k[which(diff(k)!=0L)];
 		  k         <- k[peakxs_flt0];
 		  k_flt_idx <- which(appr_peaks_y*k<0);
 		  if(length(k_flt_idx)==0) next;
@@ -441,6 +439,7 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 		  #
 	      peak_std   <- as.numeric(sqrt(peak_af1 * (1 - peak_af1) / (2^T * N1) + peak_af2 * (1 - peak_af2) / (2^T * N2)));
 		  # check if the first pos is a peak
+		  cat("fity1",fity[1],"\t",threshold,"\t",x1k,"\n");
 		  if (abs(fity[1])>abs(threshold) & fity[1] * x1k < 0){
 			  p1       <- c(x[1],fity[1],x1k);
 			  pks      <- rbind(p1,pks);
@@ -450,7 +449,8 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 			  peakxs_idx <- c(1,peakxs_idx);
 		  }
 		  # check if the last pos is a peak
-		  if (abs(fity[ylength])>abs(threshold) & fity[ylength] * xlastk < 0){
+		  cat("fityl",fity[ylength],"\t",threshold,"\t",xlastk,"\n");
+		  if (abs(fity[ylength])>abs(threshold) & fity[ylength] * xlastk > 0){
 			  plast    <- c(x[ylength],fity[ylength],xlastk);
 			  pks      <- rbind(pks,plast);
 			  peak_std <- c(peak_std,qstd[ylength]);
@@ -501,7 +501,7 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 			}
 			pos2_list      <- c(pos2_list,pos2_x);
 			# loop until pass all candidate peaks
-			flt_region_idx <- which(x_pool >= pos1_x & x_pool <= pos2_x);
+			flt_region_idx <- which(x_pool>pos1_x & x_pool<pos2_x);
 			idx_pass       <- unique(c(idx_pass,flt_region_idx));
 			y_pool[idx_pass] <- 0;
 		}
