@@ -1,4 +1,4 @@
-# version 0.3
+# version 0.4
 
 # Experiment
 Design = A              # available: A,BH,BL. BH: Design B with HIGH selected pool. BL: Design B with LOW selected pool.

@@ -1,6 +1,6 @@
 #!/usr/bin/env RScript
 
-# version 0.3
+# version 0.4
 ##############################################
 # command
 ##############################################
@@ -264,8 +264,8 @@ run_step1 <- function(conf,file_chrlen,file_bsa,file_out,statistic){
 		####################################
 		dat_chr <- rep(chro[i,1], length(block$pos));
 		dat_pos <- block$pos;
-		dat_avg <- round(block$avg,4);
-		fit_avg <- round(value,4);
+		dat_avg <- block$avg;
+		fit_avg <- value;
 		out <- data.frame(dat_chr, dat_pos, dat_avg, fit_avg);
 		if (i == 1){
 			allout <- out;
@@ -361,7 +361,7 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 	#
 	for(i in 1:length(chro[,1])){
 	    thischr <- chro[i,1];
-	    idx <- which(dat_chr == chro[i,1] & !is.na(dat_avg));
+	    idx <- which(dat_chr == thischr & !is.na(fit_avg));
 	    total <- length(idx);
 	    cat("data size of", chro[i,1], "is", total, "\n");
 	    if(total==0) next;
@@ -373,94 +373,125 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 	    qstd <- qtl_std[idx];
 	    fit2 <- locfit_by_loess(x, y);
 		#
-		peakxs_allidx <- which(diff(diff(fity)>0)!=0L)+1L;
-		peakxs_flt0<- which(abs(fity[peakxs_allidx])>threshold);
-		if(length(peakxs_flt0)==0) next;
-		peakxs_idx <- peakxs_allidx[peakxs_flt0];
-		peakallxs<- x[peakxs_allidx];
-	    peakxs   <- x[peakxs_idx];
-	    len  <- length(peakallxs);
-		approx_peaks <- peakxs;
-		appr_peaks_y <- fity[peakxs_idx];
-		x_pool <- approx_peaks;
-		y_pool <- appr_peaks_y;
+		idx_pass <- c();
 		#
 		ylength <- length(fity);
 		xlength <- length(x);
-		# left
-		lefts <- (c(x[1],peakallxs[1:len-1]) + peakallxs) / 2;
-		# right
-		rights <- (peakallxs + c(peakallxs[2:len],x[xlength])) / 2;
 		#
-		idx_pass <- c();
-		# 
-	    if (len==0){
-	      k         <- ifelse(diff(c(fity[1],fity[ylength]))>0L,1L,-1L);
-	      k         <- ifelse(k>0L,c(1L,-1L),c(-1L,1L));
-	      pks       <- data.frame(peak_x=c(x[1],x[xlength]),peak_y=c(fity[1],fity[ylength]),type=k);
-	      peak_std  <- c(qstd[1],qstd[xlength]);
-	    }else{
-	      k         <- diff(fity)>0L;
-		  x1k       <- ifelse(k[1]==TRUE,1L,-1L);
-		  xlastk    <- ifelse(k[length(k)],1L,-1L);
-		  #
-	      k         <- k[which(diff(k)!=0L)];
-		  k         <- k[peakxs_flt0];
-		  k_flt_idx <- which(appr_peaks_y*k<0);
-		  if(length(k_flt_idx)==0) next;
-	      #
-		  peakxs_idx    <- peakxs_idx[k_flt_idx];
-		  appr_peaks_y  <- appr_peaks_y[k_flt_idx];
-		  y_pool        <- appr_peaks_y;
-		  x_pool        <- x_pool[k_flt_idx];
-		  k             <- k[k_flt_idx];
-		  m             <- k<0;
-		  lefts         <- lefts[peakxs_flt0[k_flt_idx]];
-		  rights        <- rights[peakxs_flt0[k_flt_idx]];
-	      #
-	      pks  <- sapply(as.data.frame(rbind(lefts, rights,m)),
-	                     function(r){ 
-	                        optimize(f=function(x){
-	                        	predict(fit2, newdata=data.frame(x))},  # if let fit_afd = fit(obs_af1-obs_af2)
-	                        	# predict(fit_model_af1[[ i ]],x) - predict(fit_model_af2[[ i ]],x)},  # if let fit_afd = fit_af1 - fit_af2
-	                     	maximum=r[3], interval=r[c(1,2)])});
-	      pks  <- as.data.frame(t(pks));
-	      names(pks) <- c("peak_x","peak_y");
-	      pks$peak_x <- trunc(as.numeric(pks$peak_x));
-	      pks$peak_y <- round(as.numeric(pks$peak_y),4);
-		  pks$peak_y <- ifelse(pks$peak_y > 1, 1, pks$peak_y);
-		  pks$peak_y <- ifelse(pks$peak_y < -1, -1, pks$peak_y);
-	      pks$type   <- k;
-	      peak_af1   <- predict(fit_model_af1[[ i ]],pks$peak_x);
-	      peak_af2   <- predict(fit_model_af2[[ i ]],pks$peak_x);
-		  #
-		  peak_af1   <- ifelse(peak_af1 < 0, 0, peak_af1);
-		  peak_af2   <- ifelse(peak_af2 < 0, 0, peak_af2);
-		  #
-	      peak_std   <- as.numeric(sqrt(peak_af1 * (1 - peak_af1) / (2^T * N1) + peak_af2 * (1 - peak_af2) / (2^T * N2)));
-		  # check if the first pos is a peak
-		  cat("fity1",fity[1],"\t",threshold,"\t",x1k,"\n");
-		  if (abs(fity[1])>abs(threshold) & fity[1] * x1k < 0){
-			  p1       <- c(x[1],fity[1],x1k);
-			  pks      <- rbind(p1,pks);
-			  peak_std <- c(qstd[1],peak_std);
-			  y_pool   <- c(fity[1],y_pool);
-			  x_pool   <- c(x[1],x_pool);
-			  peakxs_idx <- c(1,peakxs_idx);
-		  }
-		  # check if the last pos is a peak
-		  cat("fityl",fity[ylength],"\t",threshold,"\t",xlastk,"\n");
-		  if (abs(fity[ylength])>abs(threshold) & fity[ylength] * xlastk > 0){
-			  plast    <- c(x[ylength],fity[ylength],xlastk);
-			  pks      <- rbind(pks,plast);
-			  peak_std <- c(peak_std,qstd[ylength]);
-			  y_pool   <- c(y_pool,fity[ylength]);
-			  x_pool   <- c(x_pool,x[xlength]);
-			  peakxs_idx <- c(peakxs_idx,ylength);
-		  }
-		  #
-		  all_ident_y    <- pks$peak_y + pks$type*1.65*peak_std;
+		peakxs_allidx <- which(diff(diff(fity)>0)!=0L)+1L;
+		peakxs_flt0<- which(abs(fity[peakxs_allidx])>threshold);
+		if(length(peakxs_flt0)==0){
+			k          <- c();
+			kx         <- c();
+			ky         <- c();
+			peak_std   <- c();
+			x_pool     <- c();
+			y_pool     <- c();
+			peakxs_idx <- c();
+			if(abs(fity[1]) > threshold){
+				kfirst     <- ifelse(diff(c(fity[1],fity[2]))>0L,1L,-1L);
+				k          <- c(k,kfirst);
+				kx         <- c(kx,x[1]);
+				ky         <- c(ky,fity[1]);
+				peak_std   <- c(peak_std,qstd[1]);
+				x_pool     <- c(x[1],x_pool);
+				y_pool     <- c(y[1],y_pool);
+				peakxs_idx <- c(1,peakxs_idx);
+			}
+			if(abs(fity[ylength]) > threshold){
+				klast      <- ifelse(diff(c(fity[ylength-1],fity[ylength]))>0L,-1L,1L);
+				k          <- c(k,klast);
+				kx         <- c(kx,x[xlength]);
+				ky         <- c(ky,fity[ylength]);
+				peak_std   <- c(peak_std,qstd[xlength]);
+				x_pool     <- c(x_pool,x[xlength]);
+				y_pool     <- c(y_pool,fity[ylength]);
+				peakxs_idx <- c(peakxs_idx,ylength);
+			}
+			if (length(k) == 0) next;
+			pks           <- data.frame(peak_x=kx,peak_y=ky,type=k);
+			all_ident_y   <- pks$peak_y + pks$type*1.65*peak_std;
+		}else{
+			peakxs_idx <- peakxs_allidx[peakxs_flt0];
+			peakallxs  <- x[peakxs_allidx];
+			peakxs     <- x[peakxs_idx];
+			len        <- length(peakallxs);
+			approx_peaks <- peakxs;
+			appr_peaks_y <- fity[peakxs_idx];
+			x_pool <- approx_peaks;
+			y_pool <- appr_peaks_y;
+			# left
+			lefts <- (c(x[1],peakallxs[1:len-1]) + peakallxs) / 2;
+			# right
+			rights <- (peakallxs + c(peakallxs[2:len],x[xlength])) / 2;
+			# 
+			if (len==0){
+				k         <- ifelse(diff(c(fity[1],fity[ylength]))>0L,1L,-1L);
+				k         <- ifelse(k>0L,c(1L,-1L),c(-1L,1L));
+				pks       <- data.frame(peak_x=c(x[1],x[xlength]),peak_y=c(fity[1],fity[ylength]),type=k);
+				peak_std  <- c(qstd[1],qstd[xlength]);
+			}else{
+				k         <- diff(fity)>0L;
+				x1k       <- ifelse(k[1]==TRUE,1L,-1L);
+				xlastk    <- ifelse(k[length(k)]==FALSE,1L,-1L);
+				#
+				k         <- k[which(diff(k)!=0L)+1L];
+				k         <- k[peakxs_flt0];
+				k         <- ifelse(k==TRUE,1,-1);
+				k_flt_idx <- which(appr_peaks_y*k<0);
+				if(length(k_flt_idx)==0) next;
+				#
+				peakxs_idx    <- peakxs_idx[k_flt_idx];
+				appr_peaks_y  <- appr_peaks_y[k_flt_idx];
+				y_pool        <- appr_peaks_y;
+				x_pool        <- x_pool[k_flt_idx];
+				k             <- k[k_flt_idx];
+				m             <- k<0;
+				lefts         <- lefts[peakxs_flt0[k_flt_idx]];
+				rights        <- rights[peakxs_flt0[k_flt_idx]];
+				#
+				pks  <- sapply(as.data.frame(rbind(lefts, rights,m)),
+								function(r){ 
+									optimize(f=function(x){
+										predict(fit2, newdata=data.frame(x))},
+									maximum=r[3], interval=r[c(1,2)])});
+				pks  <- as.data.frame(t(pks));
+				names(pks) <- c("peak_x","peak_y");
+				pks$peak_x <- trunc(as.numeric(pks$peak_x));
+				pks$peak_y <- round(as.numeric(pks$peak_y),4);
+				pks$peak_y <- ifelse(pks$peak_y > 1, 1, pks$peak_y);
+				pks$peak_y <- ifelse(pks$peak_y < -1, -1, pks$peak_y);
+				pks$type   <- k;
+				peak_af1   <- predict(fit_model_af1[[ i ]],pks$peak_x);
+				peak_af2   <- predict(fit_model_af2[[ i ]],pks$peak_x);
+				#
+				peak_af1   <- ifelse(peak_af1 < 0, 0, peak_af1);
+				peak_af2   <- ifelse(peak_af2 < 0, 0, peak_af2);
+				#
+				peak_std   <- as.numeric(sqrt(peak_af1 * (1 - peak_af1) / (2^T * N1) + peak_af2 * (1 - peak_af2) / (2^T * N2)));
+				# check if the first pos is a peak
+				if (abs(fity[1])>abs(threshold) & fity[1] * x1k < 0){
+					p1       <- c(x[1],fity[1],x1k);
+					pks      <- rbind(p1,pks);
+					peak_std <- c(qstd[1],peak_std);
+					y_pool   <- c(fity[1],y_pool);
+					x_pool   <- c(x[1],x_pool);
+					peakxs_idx <- c(1,peakxs_idx);
+				}
+				# check if the last pos is a peak
+				if (abs(fity[ylength])>abs(threshold) & fity[ylength] * xlastk > 0){
+					plast    <- c(x[ylength],fity[ylength],xlastk);
+					pks      <- rbind(pks,plast);
+					peak_std <- c(peak_std,qstd[ylength]);
+					y_pool   <- c(y_pool,fity[ylength]);
+					x_pool   <- c(x_pool,x[xlength]);
+					peakxs_idx <- c(peakxs_idx,ylength);
+				}
+				#
+				all_ident_y    <- pks$peak_y + pks$type*1.65*peak_std;
+			}
 		}
+
 		#
 		peak_flt1   <- c();
 		pos1_list   <- c();
@@ -501,7 +532,7 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 			}
 			pos2_list      <- c(pos2_list,pos2_x);
 			# loop until pass all candidate peaks
-			flt_region_idx <- which(x_pool>pos1_x & x_pool<pos2_x);
+			flt_region_idx <- which(x_pool>=pos1_x & x_pool<=pos2_x);
 			idx_pass       <- unique(c(idx_pass,flt_region_idx));
 			y_pool[idx_pass] <- 0;
 		}
@@ -579,7 +610,7 @@ out <- data.frame(dat_chr, dat_pos, dat_avg1, fit_avg1, dat_avg2, fit_avg2, dat_
 write.table(out, conf$Result1_File, row.names=FALSE, col.names=FALSE, quote=FALSE, sep="\t", append=TRUE);
 
 cat("Writing\n");
-out <- data.frame(af1_data[,1], af1_data[,2], af1_data[,3], af1_data[,4], af2_data[,3], af2_data[,4], afd_data[,3], afd_data[,4], aaf_data[,3], aaf_data[,4], round(var_data[,5],4));
+out <- data.frame(af1_data[,1], af1_data[,2], round(af1_data[,3],4), round(af1_data[,4],4), round(af2_data[,3],4), round(af2_data[,4],4), round(afd_data[,3],4), round(afd_data[,4],4), round(aaf_data[,3],4), round(aaf_data[,4],4), round(var_data[,5],4));
 write.table(out, conf$Result1_File, row.names=FALSE, col.names=FALSE, quote=FALSE, sep="\t", append=TRUE);
 cat("\n");
 
