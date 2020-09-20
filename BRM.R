@@ -537,7 +537,9 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 			y_pool[idx_pass] <- 0;
 		}
 		pks <- pks[sort(peak_flt1),];
-		pks <- data.frame(thischr, pks,left_x=c(trunc(pos1_list)), right_x=c(trunc(pos2_list)));
+		region_flt <- data.frame(id=peak_flt1,left_x=c(trunc(pos1_list)), right_x=c(trunc(pos2_list)));
+		region_flt <- region_flt[order(region_flt$id),];
+		pks <- data.frame(thischr, pks,left_x=region_flt$left_x, right_x=region_flt$right_x);
 		peak_flt2 <- which((pks$peak_y >= threshold | pks$peak_y <= -threshold) & pks$peak_y * pks$type < 0);
 		pks <- pks[peak_flt2,];
 		pks$type <- ifelse(pks$type==1,"-","+");
