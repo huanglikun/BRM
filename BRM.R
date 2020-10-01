@@ -421,9 +421,17 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 			x_pool <- approx_peaks;
 			y_pool <- appr_peaks_y;
 			# left
-			lefts <- (c(x[1],peakallxs[1:len-1]) + peakallxs) / 2;
+			if (len==1){
+				lefts <- (x[1] + peakallxs[1]) / 2;
+			}else{
+				lefts <- (c(x[1],peakallxs[1:len-1]) + peakallxs) / 2;
+			}
 			# right
-			rights <- (peakallxs + c(peakallxs[2:len],x[xlength])) / 2;
+			if (len==1){
+				rights <- (peakallxs[1] + x[xlength]) / 2;
+			}else{
+				rights <- (peakallxs + c(peakallxs[2:len],x[xlength])) / 2;
+			}
 			# 
 			if (len==0){
 				k         <- ifelse(diff(c(fity[1],fity[ylength]))>0L,1L,-1L);
@@ -437,6 +445,7 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 				#
 				k         <- k[which(diff(k)!=0L)+1L];
 				k         <- k[peakxs_flt0];
+				# TODO: record too close peaks (below 0.001cM), and filter them out later.
 				k         <- ifelse(k==TRUE,1,-1);
 				k_flt_idx <- which(appr_peaks_y*k<0);
 				if(length(k_flt_idx)==0) next;
@@ -457,10 +466,6 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 									maximum=r[3], interval=r[c(1,2)])});
 				pks  <- as.data.frame(t(pks));
 				names(pks) <- c("peak_x","peak_y");
-				pks$peak_x <- trunc(as.numeric(pks$peak_x));
-				pks$peak_y <- round(as.numeric(pks$peak_y),4);
-				pks$peak_y <- ifelse(pks$peak_y > 1, 1, pks$peak_y);
-				pks$peak_y <- ifelse(pks$peak_y < -1, -1, pks$peak_y);
 				pks$type   <- k;
 				peak_af1   <- predict(fit_model_af1[[ i ]],pks$peak_x);
 				peak_af2   <- predict(fit_model_af2[[ i ]],pks$peak_x);
@@ -479,7 +484,7 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 					peakxs_idx <- c(1,peakxs_idx);
 				}
 				# check if the last pos is a peak
-				if (abs(fity[ylength])>abs(threshold) & fity[ylength] * xlastk > 0){
+				if (abs(fity[ylength])>abs(threshold) & fity[ylength] * xlastk < 0){
 					plast    <- c(x[ylength],fity[ylength],xlastk);
 					pks      <- rbind(pks,plast);
 					peak_std <- c(peak_std,qstd[ylength]);
@@ -488,7 +493,7 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 					peakxs_idx <- c(peakxs_idx,ylength);
 				}
 				#
-				all_ident_y    <- pks$peak_y + pks$type*1.65*peak_std;
+				all_ident_y    <- as.numeric(pks$peak_y) + as.numeric(pks$type)*1.65*peak_std;
 			}
 		}
 
@@ -506,14 +511,18 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 			if(interval_i == 1){
 				pos1_x     <- x[1];
 			}else{
-				while(interval_i > 2 & (fity[interval_i]-all_ident_y[max_idx])*(fity[interval_i-1]-all_ident_y[max_idx]) > 0){
+				while(interval_i > 1 & (fity[interval_i]-all_ident_y[max_idx])*(fity[interval_i-1]-all_ident_y[max_idx]) > 0){
 					interval_i <- interval_i - 1;
 					if((fity[interval_i]-all_ident_y[max_idx])*(fity[interval_i-1]-all_ident_y[max_idx]) < 0) break;
 				}
-				distance_x1x2  <- x[interval_i] - x[interval_i-1];
-				dis1_y1        <- abs(fity[interval_i-1]-all_ident_y[max_idx]);
-				dis1_y2        <- abs(fity[interval_i]-all_ident_y[max_idx]);
-				pos1_x         <- x[interval_i-1]+(distance_x1x2)*(dis1_y1/(dis1_y1+dis1_y2));
+				if(interval_i == 1){
+					pos1_x     <- x[1];
+				}else{
+					distance_x1x2  <- x[interval_i] - x[interval_i-1];
+					dis1_y1        <- abs(fity[interval_i-1]-all_ident_y[max_idx]);
+					dis1_y2        <- abs(fity[interval_i]-all_ident_y[max_idx]);
+					pos1_x         <- x[interval_i-1]+(distance_x1x2)*(dis1_y1/(dis1_y1+dis1_y2));
+				}
 			}
 			pos1_list      <- c(pos1_list,pos1_x);
 			interval_i     <- peakxs_idx[max_idx];
@@ -521,14 +530,18 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 			if(interval_i == xlength){
 				pos2_x     <- x[xlength];
 			}else{
-				while(interval_i < xlength - 2 & (fity[interval_i]-all_ident_y[max_idx])*(fity[interval_i+1]-all_ident_y[max_idx]) > 0){
+				while(interval_i < xlength - 1 & (fity[interval_i]-all_ident_y[max_idx])*(fity[interval_i+1]-all_ident_y[max_idx]) > 0){
 					interval_i <- interval_i + 1;
 					if((fity[interval_i]-all_ident_y[max_idx])*(fity[interval_i+1]-all_ident_y[max_idx]) < 0) break;
 				}
-				distance_x1x2  <- x[interval_i+1] - x[interval_i];
-				dis2_y1        <- abs(fity[interval_i]-all_ident_y[max_idx]);
-				dis2_y2        <- abs(fity[interval_i+1]-all_ident_y[max_idx]);
-				pos2_x         <- x[interval_i]+(distance_x1x2)*(dis2_y1/(dis2_y1+dis2_y2));
+				if(interval_i == xlength){
+					pos2_x     <- x[xlength];
+				}else{
+					distance_x1x2  <- x[interval_i+1] - x[interval_i];
+					dis2_y1        <- abs(fity[interval_i]-all_ident_y[max_idx]);
+					dis2_y2        <- abs(fity[interval_i+1]-all_ident_y[max_idx]);
+					pos2_x         <- x[interval_i]+(distance_x1x2)*(dis2_y1/(dis2_y1+dis2_y2));
+				}
 			}
 			pos2_list      <- c(pos2_list,pos2_x);
 			# loop until pass all candidate peaks
@@ -539,10 +552,16 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 		pks <- pks[sort(peak_flt1),];
 		region_flt <- data.frame(id=peak_flt1,left_x=c(trunc(pos1_list)), right_x=c(trunc(pos2_list)));
 		region_flt <- region_flt[order(region_flt$id),];
-		pks <- data.frame(thischr, pks,left_x=region_flt$left_x, right_x=region_flt$right_x);
-		peak_flt2 <- which((pks$peak_y >= threshold | pks$peak_y <= -threshold) & pks$peak_y * pks$type < 0);
+		pks <- data.frame(thischr, pks,left_x=as.numeric(region_flt$left_x), right_x=as.numeric(region_flt$right_x));
+		peak_flt2 <- which((as.numeric(pks$peak_y) >= threshold | as.numeric(pks$peak_y) <= -threshold) & as.numeric(pks$peak_y) * as.numeric(pks$type) < 0);
 		pks <- pks[peak_flt2,];
+		# format table
+		pks$peak_x <- trunc(as.numeric(pks$peak_x));
+		pks$peak_y <- round(as.numeric(pks$peak_y),4);
+		pks$peak_y <- ifelse(pks$peak_y > 1, 1, pks$peak_y);
+		pks$peak_y <- ifelse(pks$peak_y < -1, -1, pks$peak_y);
 		pks$type <- ifelse(pks$type==1,"-","+");
+		# 
 		write.table(pks, file_out, row.names=FALSE, col.names=FALSE, quote=FALSE, sep="\t", append=TRUE);
 	}
 }
