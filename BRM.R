@@ -363,7 +363,7 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 	    thischr <- chro[i,1];
 	    idx <- which(dat_chr == thischr & !is.na(fit_avg));
 	    total <- length(idx);
-	    cat("data size of", chro[i,1], "is", total, "\n");
+	    cat("data size of", thischr, "is", total, "\n");
 	    if(total==0) next;
 	    #
 	    x <- dat_pos[idx];
@@ -511,7 +511,7 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 			if(interval_i == 1){
 				pos1_x     <- x[1];
 			}else{
-				while(interval_i > 1 & (fity[interval_i]-all_ident_y[max_idx])*(fity[interval_i-1]-all_ident_y[max_idx]) > 0){
+				while(interval_i > 2 & (fity[interval_i]-all_ident_y[max_idx])*(fity[interval_i-1]-all_ident_y[max_idx]) > 0){
 					interval_i <- interval_i - 1;
 					if((fity[interval_i]-all_ident_y[max_idx])*(fity[interval_i-1]-all_ident_y[max_idx]) < 0) break;
 				}
@@ -530,7 +530,7 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 			if(interval_i == xlength){
 				pos2_x     <- x[xlength];
 			}else{
-				while(interval_i < xlength - 1 & (fity[interval_i]-all_ident_y[max_idx])*(fity[interval_i+1]-all_ident_y[max_idx]) > 0){
+				while(interval_i < xlength - 2 & (fity[interval_i]-all_ident_y[max_idx])*(fity[interval_i+1]-all_ident_y[max_idx]) > 0){
 					interval_i <- interval_i + 1;
 					if((fity[interval_i]-all_ident_y[max_idx])*(fity[interval_i+1]-all_ident_y[max_idx]) < 0) break;
 				}
