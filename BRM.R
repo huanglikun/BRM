@@ -517,6 +517,8 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 				}
 				if(interval_i == 1){
 					pos1_x     <- x[1];
+				}else if(interval_i == 2 & (fity[interval_i]-all_ident_y[max_idx])*(fity[interval_i-1]-all_ident_y[max_idx]) > 0){
+					pos1_x     <- x[1];
 				}else{
 					distance_x1x2  <- x[interval_i] - x[interval_i-1];
 					dis1_y1        <- abs(fity[interval_i-1]-all_ident_y[max_idx]);
@@ -535,6 +537,8 @@ run_step3 <- function(conf,dat_afd,dat_var,file_out,fit_model_afd,fit_model_af1,
 					if((fity[interval_i]-all_ident_y[max_idx])*(fity[interval_i+1]-all_ident_y[max_idx]) < 0) break;
 				}
 				if(interval_i == xlength){
+					pos2_x     <- x[xlength];
+				}else if(interval_i == xlength - 1 & (fity[interval_i]-all_ident_y[max_idx])*(fity[interval_i+1]-all_ident_y[max_idx]) > 0){
 					pos2_x     <- x[xlength];
 				}else{
 					distance_x1x2  <- x[interval_i+1] - x[interval_i];
