@@ -86,9 +86,9 @@ chk_conf <- function(conf){
 # block's middle position 
 def_block_pos <- function(chr, size){
 	# block number
-	n <- as.integer(2*chr/size)+2;
+	n <- floor(as.numeric(2*chr/size)+2);
 	if( n%%2 != 0 ) n <- n+1;
-	n <- as.integer(n/2);
+	n <- floor(as.numeric(n/2));
 	# block index and the middle position of each block
 	i <- c(1:n);
 	pos <- (i-1)*size+floor(size/2); # middle position
@@ -101,7 +101,7 @@ cal_block_meta <- function(loc, val, chr, size, depth, MIN){
 	# input: location vector, value vector
 	# input: chr length, block size, location depth vector
 	pos <- def_block_pos(chr, size);
-	idx <- as.integer(0.5+loc/size)+1;
+	idx <- floor(as.numeric(0.5+loc/size)+1);
 	#
 	avg <- c();
 	blockDepth <- c();
@@ -240,6 +240,8 @@ run_step1 <- function(conf,file_chrlen,file_bsa,file_out,statistic){
 		jdx <- which(!is.na(y));
 		cat("Total blocks in ", chro[i,1], ": ", length(x), "\n", sep="");
 		cat("Number of valid block:", length(jdx), "\n");
+		# warning whether the block size is too small
+		if (length(jdx) > 15000) cat("Warning: whether the block size is too small? Maybe try a larger block size next time?\n");
 		# only consider those chromosomes that have at least MINVALID valid blocks
 		if(length(jdx)<MINVALID) next;
 		#
